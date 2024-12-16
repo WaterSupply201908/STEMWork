@@ -13,11 +13,18 @@ class App(ctk.CTk) :
         self.columnconfigure(0, weight=1)
         self.rowconfigure((0, 1, 2, 3), weight=1, uniform='a')
 
+        # 
+        self.updateBMI()
+
         ResultText(self)
         WeightInput(self)
         HeightInput(self)
+        UnitSwitcher(self)
 
         self.mainloop()
+
+    def updateBMI() :
+        pass
 
 class ResultText(ctk.CTkLabel) :
     def __init__(self, parent) :
@@ -64,6 +71,25 @@ class HeightInput(ctk.CTkFrame) :
         super().__init__(master=parent, fg_color='White')
 
         self.grid(column=0, row=3, sticky='nsew', padx=10, pady=10)
+
+        slider = ctk.CTkSlider(master=self,
+                               button_color='Green',
+                               button_hover_color='Gray',
+                               progress_color='Green',
+                               fg_color='Light Gray')
+        slider.pack(side='left', fill='x', expand=True, padx=10, pady=10)
+
+        outputText = ctk.CTkLabel(self, text='1.80', text_color='Black',
+                                  font=ctk.CTkFont(family='Calibri', size=26))
+        outputText.pack(side='left', padx=20)
+
+class UnitSwitcher(ctk.CTkLabel) :
+    def __init__(self, parent) :
+        super().__init__(master=parent, text='Metric',
+                         text_color='Dark Green',
+                         font=ctk.CTkFont(family='Calibri', size=18))
+
+        self.place(relx=0.98, rely=0.01, anchor='ne')
 
 # Main program
 if __name__ == '__main__' :
