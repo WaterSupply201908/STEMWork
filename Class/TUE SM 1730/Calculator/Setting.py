@@ -40,10 +40,10 @@ OPERATORS = {
 }
 
 COLORS = {
-    'light-gray' : {'fg':('#', '#'), 'hover':('#', '#'), 'text':('', '')},
-    'dark-gray' : {'fg':('#', '#'), 'hover':('#', '#'), 'text':('', '')},
-    'orange' : {'fg':('#', '#'), 'hover':('#', '#'), 'text':('', '')},
-    'orange-highlight' : {'fg':('#', '#'), 'hover':('#', '#'), 'text':('', '')}
+    'light-gray' : {'fg':('#505050', '#d4d4d2'), 'hover':('#686868', '#efefed'), 'text':('white', 'black')},
+    'dark-gray' : {'fg':('#d4d4d2', '#505050'), 'hover':('#efefed', '#686868'), 'text':('black', 'white')},
+    'orange' : {'fg':'#ff9500', 'hover':'#ffb143', 'text':('black', 'white')},
+    'orange-highlight' : {'fg':'white', 'hover':'white', 'text':('black', '#ff9500')}
 }
 
 BLACK = '#000000'
