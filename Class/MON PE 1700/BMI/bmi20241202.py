@@ -13,6 +13,7 @@ class App(ctk.CTk) :
         self.columnconfigure(0, weight=1)
         self.rowconfigure((0, 1, 2, 3), weight=1, uniform='a')
 
+        self.metric_bool = ctk.BooleanVar(value=True)
         self.weight_float = ctk.DoubleVar(value=65)
         self.height_int = ctk.IntVar(value=170)
         self.bmi_string = ctk.StringVar()
@@ -23,8 +24,8 @@ class App(ctk.CTk) :
 
         ResultText(self, self.bmi_string)
         WeightInput(self, self.weight_float)
-        HeightInput(self, self.height_int)
-        UnitSwitcher(self)
+        HeightInput(self, self.height_int, self.metric_bool)
+        UnitSwitcher(self, self.metric_bool)
 
         self.mainloop()
 
@@ -48,6 +49,8 @@ class WeightInput(ctk.CTkFrame) :
         self.grid(column=0, row=2, sticky='nsew', padx=10, pady=10)
 
         self.weight_float = weight_float
+        self.output_string = ctk.StringVar()
+        self.update_weight()
 
         self.rowconfigure(0, weight=1, uniform='b')
         self.columnconfigure(0, weight=2, uniform='b')
@@ -57,7 +60,7 @@ class WeightInput(ctk.CTkFrame) :
         self.columnconfigure(4, weight=2, uniform='b')
 
         font = ctk.CTkFont(family='Calibri', size = 26)
-        label = ctk.CTkLabel(self, text='70kg', text_color='Black', font=font)
+        label = ctk.CTkLabel(self, textvariable=self.output_string, text='70kg', text_color='Black', font=font)
         label.grid(row=0, column=2)
 
         minusButton = ctk.CTkButton(self, command=lambda:self.update_weight(('minus', 'large')),
@@ -81,23 +84,27 @@ class WeightInput(ctk.CTkFrame) :
         smallMinusButton.grid(row=0, column=1, padx=4, pady=4)
 
     def update_weight(self, info=None) :
-        amount = 0
+        if info :
+            amount = 0
 
-        if info[1] == 'large' :
-            amount = 1
-        else :
-            amount = 0.1
+            if info[1] == 'large' :
+                amount = 1
+            else :
+                amount = 0.1
 
-        if info[0] == 'plus' :
-            self.weight_float.set(self.weight_float.get() + amount)
-        else :
-            self.weight_float.set(self.weight_float.get() - amount)
+            if info[0] == 'plus' :
+                self.weight_float.set(self.weight_float.get() + amount)
+            else :
+                self.weight_float.set(self.weight_float.get() - amount)
+        self.output_string.set(f'{round(self.weight_float.get(), 1)}kg')
 
 class HeightInput(ctk.CTkFrame) :
-    def __init__(self, parent, height_int) :
+    def __init__(self, parent, height_int, metric_bool) :
         super().__init__(master=parent, fg_color='White')
 
         self.grid(column=0, row=3, sticky='nsew', padx=10, pady=10)
+
+        self.metric_bool = metric_bool
 
         slider = ctk.CTkSlider(master=self,
                                command=self.update_text,
@@ -118,18 +125,33 @@ class HeightInput(ctk.CTkFrame) :
         outputText.pack(side='left', padx=20)
 
     def update_text(self, amount) :
-        text_string = str(int(amount))
-        m = text_string[0]
-        cm = text_string[1:]
-        self.output_string.set(f'{m}.{cm}m')
+        if self.metric_bool.get() :
+            text_string = str(int(amount))
+            m = text_string[0]
+            cm = text_string[1:]
+            self.output_string.set(f'{m}.{cm}m')
+        else :
+            feet, inches = divmod(amount / 2.54, 12)
+            self.output_string.set(f'{int(feet)}\'{int(inches)}\"')
 
 class UnitSwitcher(ctk.CTkLabel) :
-    def __init__(self, parent) :
+    def __init__(self, parent, metric_bool) :
         super().__init__(master=parent, text='Metric',
                          text_color='Dark Green',
                          font=ctk.CTkFont(family='Calibri', size=18))
 
         self.place(relx=0.98, rely=0.01, anchor='ne')
+
+        self.metric_bool = metric_bool
+        self.bind('<Button>', self.change_units)
+
+    def change_units(self, event) :
+        self.metric_bool.set(not self.metric_bool.get())
+
+        if self.metric_bool.get() :
+            self.configure(text='Metric')
+        else :
+            self.configure(text='Imperial')
 
 # Main program
 if __name__ == '__main__' :
