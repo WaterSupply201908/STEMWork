@@ -1,11 +1,17 @@
+# Date
 2024-12-28
 
+# Notebook
 Tutor : LAP021
 
+# Tool
 replit.com
 
+# File Location
 TW SAT 15:30/bmi.py
 
-https://drive.google.com/drive/folders/1qMt0LIQJGqq4-YeVG7vfNzHnJcpOfjEk?usp=drive_link
+# Documentation
+[Advanced](https://drive.google.com/drive/folders/1qMt0LIQJGqq4-YeVG7vfNzHnJcpOfjEk?usp=drive_link)
 
+# Accounts
 - Tutor : codon-bevy0k@icloud.com
