@@ -1,12 +1,12 @@
 # Date
-2024-12-27
+2025-01-03
 
 # Notebook
 - Tutor : LAP011
 - Hugo : LAP012
 
 # File Location
-C:\Users\stemwork001\Documents\Runner\main.py
+C:\Users\stemwork001\Documents\Runner\
 
 # Tool
 VS Code
