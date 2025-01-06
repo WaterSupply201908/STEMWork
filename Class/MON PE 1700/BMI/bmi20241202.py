@@ -21,10 +21,11 @@ class App(ctk.CTk) :
 
         self.weight_float.trace('w', self.updateBMI)
         self.height_int.trace('w', self.updateBMI)
+        self.metric_bool.trace('w', self.change_units)
 
         ResultText(self, self.bmi_string)
-        WeightInput(self, self.weight_float)
-        HeightInput(self, self.height_int, self.metric_bool)
+        self.weight_input = WeightInput(self, self.weight_float, self.metric_bool)
+        self.height_input = HeightInput(self, self.height_int, self.metric_bool)
         UnitSwitcher(self, self.metric_bool)
 
         self.mainloop()
@@ -35,6 +36,10 @@ class App(ctk.CTk) :
         bmi_result = round(weight_kg / height_m ** 2, 2)
         self.bmi_string.set(bmi_result)
 
+    def change_units(self, *args) :
+        self.height_input.update_text(self.height_int.get())
+        self.weight_input.update_weight()
+
 class ResultText(ctk.CTkLabel) :
     def __init__(self, parent, bmi_string) :
         font = ctk.CTkFont(family='Calibri', size=150, weight='bold')
@@ -43,12 +48,13 @@ class ResultText(ctk.CTkLabel) :
         self.grid(column=0, row=0, rowspan=2, sticky='nsew')
 
 class WeightInput(ctk.CTkFrame) :
-    def __init__(self, parent, weight_float) :
+    def __init__(self, parent, weight_float, metric_bool) :
         super().__init__(master=parent, fg_color='White')
 
         self.grid(column=0, row=2, sticky='nsew', padx=10, pady=10)
 
         self.weight_float = weight_float
+        self.metric_bool = metric_bool
         self.output_string = ctk.StringVar()
         self.update_weight()
 
@@ -87,16 +93,28 @@ class WeightInput(ctk.CTkFrame) :
         if info :
             amount = 0
 
-            if info[1] == 'large' :
-                amount = 1
+            if self.metric_bool.get() :
+                if info[1] == 'large' :
+                    amount = 1
+                else :
+                    amount = 0.1
             else :
-                amount = 0.1
+                if info[1] == 'large' :
+                    amount = 0.453592
+                else :
+                    amount = 0.453592 / 16
 
             if info[0] == 'plus' :
                 self.weight_float.set(self.weight_float.get() + amount)
             else :
                 self.weight_float.set(self.weight_float.get() - amount)
-        self.output_string.set(f'{round(self.weight_float.get(), 1)}kg')
+
+        if self.metric_bool.get() :
+            self.output_string.set(f'{round(self.weight_float.get(), 1)}kg')
+        else :
+            raw = self.weight_float.get() * 2.20462 * 16
+            pounds, ounces = divmod(raw, 16)
+            self.output_string.set(f'{int(pounds)}lb {int(ounces)}oz')
 
 class HeightInput(ctk.CTkFrame) :
     def __init__(self, parent, height_int, metric_bool) :
