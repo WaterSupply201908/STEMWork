@@ -1,5 +1,5 @@
 # Date
-2024-12-17
+2024-12-31
 
 # Notebook
 - Tutor : LAP045
@@ -7,10 +7,10 @@
 - Jeffrey : LAP036
 
 # File Location
-C:\Users\stemwork001\Documents\Runner\main.py
+C:\Users\stemwork001\Documents\
 
 # Tool
 VS Code
 
-# Documentiona
+# Documention
 [Advanced](https://drive.google.com/drive/folders/1qMt0LIQJGqq4-YeVG7vfNzHnJcpOfjEk?usp=drive_link)
