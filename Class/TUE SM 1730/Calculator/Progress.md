@@ -6,11 +6,11 @@
 - Issac : LAP035
 - Jeffrey : LAP036
 
-# File Location
-C:\Users\stemwork001\Documents\
-
 # Tool
 VS Code
 
-# Documention
+# File Location
+C:\Users\stemwork001\Documents\
+
+# Documentation
 [Advanced](https://drive.google.com/drive/folders/1qMt0LIQJGqq4-YeVG7vfNzHnJcpOfjEk?usp=drive_link)
