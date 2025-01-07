@@ -12,4 +12,10 @@ Tutor : LAP027
   + Zac
 
 # File Location
+PE SAT 09:30/Calculator.py
+
+# Documentation
 [Advanced](https://drive.google.com/drive/folders/1qMt0LIQJGqq4-YeVG7vfNzHnJcpOfjEk?usp=drive_link)
+
+# Accounts
+- Tutor : codon-bevy0k@icloud.com
