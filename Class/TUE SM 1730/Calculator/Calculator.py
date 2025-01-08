@@ -1,7 +1,8 @@
 import customtkinter as ctk
 import darkdetect
 from Setting import *
-from Button import Button
+from Button import Button, ImageButton
+from PIL import Image
 
 class Calculator(ctk.CTk) :
     def __init__(self, is_dark) :
@@ -19,8 +20,8 @@ class Calculator(ctk.CTk) :
         self.rowconfigure(list(range(MAIN_ROWS)), weight=1, uniform='a')
         self.columnconfigure(list(range(MAIN_COLUMNS)), weight=1, uniform='a')
 
-        self.result_string = ctk.StringVar(value= '0')
-        self.formula_string = ctk.StringVar(value='')
+        self.result_string = ctk.StringVar(value='0')
+        self.formula_string = ctk.StringVar(value='test')
 
         self.create_widgets()
         
@@ -48,16 +49,16 @@ class Calculator(ctk.CTk) :
                font=main_font)
 
     def clear(self):
-        print('clearx')
+        print('clear')
 
     def percent(self):
         print('percent')
 
-class OutputLabel(ctk.CTkLabel):
+class OutputLabel(ctk.CTkLabel) :
     def __init__(self, parent, row, anchor, font,string_var):
-        super().__init__(master=parent, font= font, textvariable = string_var)
-        self.grid(column = 0, columnspan = 4, row = row, sticky = anchor,padx = 10)
+        super().__init__(master=parent, font=font, textvariable=string_var)
+        self.grid(column=0, columnspan=4, row=row, sticky=anchor,padx=10)
 
 # Main program
-if __name__ == '__main__':
+if __name__ == '__main__' :
     Calculator(darkdetect.isDark())
