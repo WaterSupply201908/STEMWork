@@ -45,11 +45,68 @@ class Snake:
     self.direction = Vector2(-1, 0)
     self.new_block = False
 
+    self.head_up = pygame.image.load('head_up.png').convert_alpha()
+    self.head_down = pygame.image.load('head_down.png').convert_alpha()
+    self.head_right = pygame.image.load('head_right.png').convert_alpha()
+    self.head_left = pygame.image.load('head_left.png').convert_alpha()
+
+    self.tail_up = pygame.image.load('tail_up.png').convert_alpha()
+    self.tail_down = pygame.image.load('tail_down.png').convert_alpha()
+    self.tail_right = pygame.image.load('tail_right.png').convert_alpha()
+    self.tail_left = pygame.image.load('tail_left.png').convert_alpha()
+
+    self.body_vertical = pygame.image.load('body_vertical.png').convert_alpha()
+    self.body_horizontal = pygame.image.load('body_horizontal.png').convert_alpha()
+  
+  def update_head_graphics(self) :
+    head_relation = self.body[1] - self.body[0]
+
+    if head_relation == Vector2(1, 0) :
+      self.head = self.head_left
+    elif head_relation == Vector2(-1, 0) :
+      self.head = self.head_right
+    elif head_relation == Vector2(0, 1) :
+      self.head = self.head_up
+    elif head_relation == Vector2(0, -1) :
+      self.head = self.head_down
+
+  def update_tail_graphics(self) :
+    tail_relation = self.body[-2] - self.body[-1]
+
+    if tail_relation == Vector2(1, 0) :
+      self.tail = self.tail_left
+    elif tail_relation == Vector2(-1, 0) :
+      self.tail = self.tail_right
+    elif tail_relation == Vector2(0, 1) :
+      self.tail = self.tail_up
+    elif tail_relation == Vector2(0, -1) :
+      self.tail = self.tail_down
+
   def draw_snake(self):
-    for block in self.body:
-      block_rect = pygame.Rect(block.x * cell_size, block.y * cell_size,
+    self.update_head_graphics()
+    self.update_tail_graphics()
+
+    for index, block in enumerate(self.body) :
+      block_rect = pygame.Rect(block.x * cell_size,
+                               block.y * cell_size,
                                cell_size, cell_size)
-      pygame.draw.rect(screen, (183, 191, 122), block_rect)
+
+      if index == 0 :
+        screen.blit(self.head, block_rect)
+      elif index == len(self.body) - 1 :
+        screen.blit(self.tail, block_rect)
+      else :
+        previous_block = self.body[index + 1] - block
+        next_block = self.body[index - 1] - block
+
+        if previous_block.x == next_block.x :
+          screen.blit(self.body_vertical, block_rect)
+        elif previous_block.y == next_block.y :
+          screen.blit(self.body_horizontal, block_rect)
+    # for block in self.body:
+    #  block_rect = pygame.Rect(block.x * cell_size, block.y * cell_size,
+    #                           cell_size, cell_size)
+    #  pygame.draw.rect(screen, (183, 191, 122), block_rect)
 
   def move_snake(self):
     if self.new_block:
@@ -74,7 +131,8 @@ class Fruit:
   def draw_fruit(self):
     fruit_rect = pygame.Rect(self.pos.x * cell_size, self.pos.y * cell_size,
                              cell_size, cell_size)
-    pygame.draw.rect(screen, (126, 166, 114), fruit_rect)
+    screen.blit(apple, fruit_rect)
+  # pygame.draw.rect(screen, (126, 166, 114), fruit_rect)
 
   def randomize(self):
     self.x = random.randint(0, cell_number - 1)
@@ -89,6 +147,7 @@ cell_number = 20
 screen = pygame.display.set_mode(
     (cell_number * cell_size, cell_number * cell_size))
 clock = pygame.time.Clock()
+apple = pygame.image.load('apple.png').convert_alpha()
 
 main_game = MAIN()
 
