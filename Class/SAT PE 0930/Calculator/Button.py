@@ -55,11 +55,10 @@ class MathButton(Button) :
             )
 
 class MathImageButton(ImageButton) :
-    def __init__(self, parent, text, operator, func, col, row, image, color='orange') :
+    def __init__(self, parent, operator, func, col, row, image, color='orange') :
         super().__init__(
             parent=parent,
             func=lambda:func(operator),
-            text=text,
             col=col,
             row=row,
             image=image,
