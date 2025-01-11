@@ -24,6 +24,8 @@ class Calculator(ctk.CTk):
 
         self.result_string = ctk.StringVar(value='0')
         self.formula_string = ctk.StringVar(value='test')
+        self.display_nums = []
+        self.full_operation = []
 
         self.create_widgets()
 
@@ -74,9 +76,9 @@ class Calculator(ctk.CTk):
             if data['image path'] :
                 MathImageButton(parent=self,
                        operator=operator,
-                       func= self.math_press,
-                       col= data['col'],
-                       row= data['row'],
+                       func=self.math_press,
+                       col=data['col'],
+                       row=data['row'],
                        image=ctk.CTkImage(
                            light_image=Image.open(data['image path']['dark']),
                            dark_image=Image.open(data['image path']['light'])
@@ -86,9 +88,9 @@ class Calculator(ctk.CTk):
                 MathButton(parent=self,
                            text=data['character'],
                            operator=operator,
-                           func= self.math_press,
-                           col= data['col'],
-                           row= data['row'],
+                           func=self.math_press,
+                           col=data['col'],
+                           row=data['row'],
                            font=main_font
                 )
 
@@ -102,10 +104,15 @@ class Calculator(ctk.CTk):
         print('invert')
 
     def num_press(self, value):
-        print(value)
+        self.display_nums.append(f'{value}')
+        full_number = ''.join(self.display_nums)
+        self.result_string.set(full_number)
 
     def math_press(self, value) :
-        print(value)
+        current_number = ''.join(self.display_nums)
+        if current_number :
+            self.full_operation.append(current_number)
+            self.full_operation.append(value)
 
 class OutputLabel(ctk.CTkLabel):
 
