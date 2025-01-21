@@ -35,11 +35,34 @@ class NumButton(Button) :
     def __init__(self, parent, text, func, col, row, font, span, color='light-gray') :
         super().__init__(
             parent=parent,
-            func=func,
+            func=lambda:func(text),
             text=text,
             col=col,
             row=row,
             font=font,
             color=color,
             span=span
+        )
+
+class MathButton(Button) :
+    def __init__(self, parent, text, operator, func, col, row, font, color='orange') :
+        super().__init__(
+            parent=parent,
+            func=lambda:func(operator),
+            text=text,
+            col=col,
+            row=row,
+            font=font,
+            color=color
+        )
+
+class MathImageButton(ImageButton) :
+    def __init__(self, parent, operator, func, col, row, image, color='orange') :
+        super().__init__(
+            parent=parent,
+            func=lambda:func(operator),
+            col=col,
+            row=row,
+            image=image,
+            color=color
         )
