@@ -99,16 +99,36 @@ class Calculator(ctk.CTk):
         self.formula_string.set('')
 
     def percent(self):
-        print('percent')
+        if self.display_nums :
+            current_number = float(''.join(self.display_nums))
+            percent_number = current_number / 100
+
+            if isinstance(percent_number, float) :
+                if percent_number.is_integer():
+                    percent_number = int(percent_number)
+                else :
+                    percent_number = round(percent_number, 3)
+
+            self.display_nums = list(str(percent_number))
+            self.result_string.set(''.join(self.display_nums))
 
     def invert(self):
-        print('invert')
+        if self.display_nums :
+            current_number = float(''.join(self.display_nums))
+            if current_number > 0 :
+                self.display_nums.insert(0, '-')
+            elif current_number < 0 :
+                self.display_nums.pop(0)
+
+            self.result_string.set(''.join(self.display_nums))
 
     def num_press(self, value):
-        # page 49
-        # psuedo code : describe algorithm
-        # flowchart
+        # TODO
+        # design algorithm
+        # 1. flowchart
+        # 2. psuedo code
         # if value not zero or (value is zero and display_nums not empty) :
+        if value != 0 or (value == 0 and self.display_nums) :
             self.display_nums.append(f'{value}')
             full_number = ''.join(self.display_nums)
             self.result_string.set(full_number)
@@ -133,9 +153,9 @@ class Calculator(ctk.CTk):
                         result = round(result, 3)
 
                 self.full_operation.clear()
-                self.display_nums = [str(result)]
+                self.display_nums = list(str(result))
 
-                self.result_string.set(result)
+                self.result_string.set(''.join(self.display_nums))
                 self.formula_string.set(formula)
 
 
