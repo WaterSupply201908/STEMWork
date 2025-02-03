@@ -19,22 +19,34 @@ snail_rect = snail_surface.get_rect(midbottom=(600, 300))
 
 player_surface = pygame.image.load('player_walk_1.png').convert_alpha()
 player_rect = player_surface.get_rect(midbottom=(80, 300))
+player_gravity = -20
 
 while True :
     for e in pygame.event.get() :
         if e.type == pygame.QUIT :
             pygame.quit()
             exit()
+        if e.type == pygame.KEYDOWN :
+            if e.key == pygame.K_SPACE :
+                player_gravity = -20
 
     screen.blit(sky_surface, (0, 0))
     screen.blit(ground_surface, (0, 300))
-    pygame.draw.rect(screen, 'Pink', score_rect, 6, 10)
+    pygame.draw.rect(screen, '#C0E8EC', score_rect)
     screen.blit(score_surface, score_rect)
+
+    #keys = pygame.key.get_pressed()
+    #if keys[pygame.K_SPACE] :
+    #    print('jump')
 
     snail_rect.x -= 4
     if snail_rect.right <= 0 :
         snail_rect.left = 800
     screen.blit(snail_surface, snail_rect)
+    player_gravity += 1
+    player_rect.y += player_gravity
+    if player_rect.bottom >= 300 :
+        player_rect.bottom = 300
     screen.blit(player_surface, player_rect)
 
     if player_rect.colliderect(snail_rect) :
