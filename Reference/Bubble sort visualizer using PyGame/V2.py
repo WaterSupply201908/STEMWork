@@ -42,7 +42,6 @@ def draw_bars(win, bars, bar_width, compare_bars=(), sorted_bars=(), swap_bars=(
     
     pygame.display.update()
 
-
 # --- Bubble Sort Algorithm ---
 def bubble_sort(win, bars, bar_width):
     n = len(bars)
@@ -60,7 +59,6 @@ def bubble_sort(win, bars, bar_width):
                 draw_bars(win, bars, bar_width, swap_bars=(j, j+1)) # Draw after swap
                 time.sleep(0.05)
                 swapped = True
-
             
         sorted_bars.append(n-i-1);  # The Last element is sorted
         draw_bars(win, bars, bar_width, sorted_bars=sorted_bars) # update screen
@@ -100,7 +98,6 @@ def main():
             draw_bars(win, bars, bar_width) # For Initial screen
 
     pygame.quit()
-    
 
 if __name__ == '__main__':
     main()
