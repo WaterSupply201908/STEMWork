@@ -1,4 +1,4 @@
 - [L18 - Vampire survivor](https://docs.google.com/presentation/d/1zei0dHR0fZpzkVmF3AFyU8WhgyniOXyQ/edit?usp=drive_link&ouid=110300061605190149204&rtpof=true&sd=true)
-- [stemwork_answer_4_python/lesson19](https://github.com/HarryStemwork/stemwork_answer_4_python/tree/main/lesson19)
 - [Resource](https://drive.google.com/file/d/1cIxCHwes7Bcib1ZXPmMfWAcZdcf2jJbZ/view?usp=drive_link)
 - [tinyurl.com/vs-resource](https://tinyurl.com/vs-resource)
+- [Final](https://drive.google.com/drive/folders/1FxIfRy81qh4IXNjAzJBOPKp4cIrwOKJ_?usp=drive_link)
