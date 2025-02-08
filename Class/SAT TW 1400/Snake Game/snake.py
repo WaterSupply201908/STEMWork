@@ -25,51 +25,61 @@ class MAIN:
     if self.fruit.pos == self.snake.body[0]:
       self.fruit.randomize()
       self.snake.add_block()
+      self.snake.play_crunch_sound()
 
+    for block in self.snake.body[1:] :
+      if block == self.fruit.pos :
+        self.fruit.randomize()
+    
   def game_over(self):
-    pygame.quit()
-    exit()
+    self.snake.reset()
 
   def check_fail(self):
-    if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[
-        0].y < cell_number:
+    if not 0 <= self.snake.body[0].x < cell_number or not 0 <= self.snake.body[0].y < cell_number:
       self.game_over()
 
     for block in self.snake.body[1:]:
       if block == self.snake.body[0]:
         self.game_over()
 
-  def draw_grass(self) :
+  def draw_grass(self):
     grass_color = (167, 209, 61)
 
-    for row in range(cell_number) :
-      if row % 2 == 0 :
-        for col in range(cell_number) :
-          if col % 2 == 0 :
-            grass_rect = pygame.Rect(col*cell_size, row*cell_size, cell_size, cell_size)
+    for row in range(cell_number):
+      if row % 2 == 0:
+        for col in range(cell_number):
+          if col % 2 == 0:
+            grass_rect = pygame.Rect(col * cell_size, row * cell_size,
+                                     cell_size, cell_size)
             pygame.draw.rect(screen, grass_color, grass_rect)
-      else :
-        for col in range(cell_number) :
-          if col % 2 != 0 :
-            grass_rect = pygame.Rect(col*cell_size, row*cell_size, cell_size, cell_size)
+      else:
+        for col in range(cell_number):
+          if col % 2 != 0:
+            grass_rect = pygame.Rect(col * cell_size, row * cell_size,
+                                     cell_size, cell_size)
             pygame.draw.rect(screen, grass_color, grass_rect)
 
-  def draw_score(self) :
+  def draw_score(self):
     score_text = str(len(self.snake.body) - 3)
     score_surf = game_font.render(score_text, True, (56, 74, 12))
     score_x = int(cell_size * cell_number - 60)
     score_y = int(cell_size * cell_number - 60)
-    score_rect = score_surf.get_rect(center = (score_x, score_y))
+    score_rect = score_surf.get_rect(center=(score_x, score_y))
     apple_rect = apple.get_rect(midright=(score_rect.left, score_rect.centery))
+    bg_rect = pygame.Rect(apple_rect.left, apple_rect.top,
+                          apple_rect.width + score_rect.width,
+                          apple_rect.height)
+    pygame.draw.rect(screen, (167, 209, 61), bg_rect)
 
     screen.blit(score_surf, score_rect)
     screen.blit(apple, apple_rect)
-            
+
+
 class Snake:
 
   def __init__(self):
     self.body = [Vector2(5, 10), Vector2(6, 10), Vector2(7, 10)]
-    self.direction = Vector2(-1, 0)
+    self.direction = Vector2(0, 0)
     self.new_block = False
 
     self.head_up = pygame.image.load('head_up.png').convert_alpha()
@@ -90,6 +100,8 @@ class Snake:
     self.body_tl = pygame.image.load('body_tl.png').convert_alpha()
     self.body_br = pygame.image.load('body_br.png').convert_alpha()
     self.body_bl = pygame.image.load('body_bl.png').convert_alpha()
+
+    self.crunch_sound = pygame.mixer.Sound('crunch.wav')
 
   def update_head_graphics(self):
     head_relation = self.body[1] - self.body[0]
@@ -159,6 +171,13 @@ class Snake:
   def add_block(self):
     self.new_block = True
 
+  def play_crunch_sound(self):
+    self.crunch_sound.play()
+
+  def reset(self):
+    self.body = [Vector2(5,10),Vector2(6,10),Vector2(7,10)]
+    self.direction = Vector2(0,0)
+
 class Fruit:
 
   def __init__(self):
@@ -181,7 +200,8 @@ class Fruit:
 pygame.init()
 cell_size = 40
 cell_number = 20
-screen = pygame.display.set_mode((cell_number * cell_size, cell_number * cell_size))
+screen = pygame.display.set_mode(
+    (cell_number * cell_size, cell_number * cell_size))
 clock = pygame.time.Clock()
 apple = pygame.image.load('apple.png').convert_alpha()
 game_font = pygame.font.Font('PoetsenOne-Regular.ttf', 20)
