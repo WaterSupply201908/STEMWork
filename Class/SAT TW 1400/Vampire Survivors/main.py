@@ -1,4 +1,5 @@
 from settings import *
+from player import Player # Player()
 
 class Game :
   def __init__(self) :
@@ -8,6 +9,8 @@ class Game :
     pygame.display.set_caption('Vampire Survivors')
     self.clock = pygame.time.Clock()
     self.running = True
+    self.all_sprites = pygame.sprite.Group()
+    self.player = Player((400, 300), self.all_sprites) # object : instance of a class
 
   def run(self) :
     while self.running :
@@ -17,6 +20,8 @@ class Game :
         if event.type == pygame.QUIT :
           self.running = False
 
+      self.all_sprites.update(dt)
+      self.all_sprites.draw(self.display_surface)
       pygame.display.update()
 
     pygame.quit()
