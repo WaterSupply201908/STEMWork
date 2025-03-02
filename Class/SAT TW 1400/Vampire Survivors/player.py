@@ -5,5 +5,5 @@ class Player(pygame.sprite.Sprite) : # parent class
   # method : function defined in a class
   def __init__(self, pos, groups) :
     super().__init__(groups)
-    self.image = pygame.image.load(join('Image', 'Player', 'Down', '0.png')).convert_alpha()
+    self.image = pygame.image.load(join('VampireSurvivors', 'Image', 'Player', 'Down', '0.png')).convert_alpha()
     self.rect = self.image.get_frect(center = pos)
