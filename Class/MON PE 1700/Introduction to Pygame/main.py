@@ -3,7 +3,36 @@ from sys import exit
 from random import randint
 
 class Player(pygame.sprite.Sprite) : # parent class (pygame.sprite.Sprite) -> child class (Player)
-    pass
+    def __init__(self) :
+        super().__init__()
+        self.player_walk_1 = pygame.image.load('player_walk_1.png').convert_alpha()
+        self.player_walk_2 = pygame.image.load('player_walk_2.png').convert_alpha()
+        self.play_walk = [self.player_walk_1, self.player_walk_2]
+        self.player_index = 0
+        self.player_jump = pygame.image.load('jump.png').convert_alpha()
+        self.image = self.play_walk[self.player_index]
+        self.rect = self.image.get_rect(midbottom=(200, 300))
+        self.gravity = 0
+
+    def player_input(self) :
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_SPACE] and self.rect.bottom >= 300 :
+            self.gravity = -20
+
+    def apply_gravity(self) :
+        self.gravity += 1
+        self.rect.y += self.gravity
+        if self.rect.bottom >= 300 :
+            self.rect.bottom = 300
+
+    def update(self) :
+        self.player_input()
+        self.apply_gravity()
+        self.animation_state()
+
+    def animation_state(self) :
+        pass
 
 def display_score() :
     current_time = int(pygame.time.get_ticks()/1000) - start_time
@@ -86,6 +115,9 @@ game_name_rect = game_name.get_rect(center=(400, 80))
 game_message = test_font.render('Press <space> to run...', False, (111, 196, 169))
 game_message_rect = game_name.get_rect(center=(320, 320))
 
+player =pygame.sprite.GroupSingle()
+player.add(Player())
+
 obstacle_time = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacle_time, 1500)
 
@@ -156,6 +188,8 @@ while True :
             player_rect.bottom = 300
         player_animation()
         screen.blit(player_surface, player_rect)
+        player.draw(screen)
+        player.update()
 
         obstacle_rect_list = obstacle_movement(obstacle_rect_list)
 
