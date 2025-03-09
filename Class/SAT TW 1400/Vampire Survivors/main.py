@@ -21,11 +21,13 @@ class Game :
           self.running = False
 
       self.all_sprites.update(dt)
+      self.display_surface.fill('black')
       self.all_sprites.draw(self.display_surface)
       pygame.display.update()
 
     pygame.quit()
 
+# Main program
 if __name__ == '__main__' :
   game = Game()
   game.run()
