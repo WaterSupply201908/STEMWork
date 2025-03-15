@@ -23,6 +23,7 @@ def obstacle_movement(obstacle_list) :
   else :
     return []
 
+# Main program
 pygame.init()
 screen = pygame.display.set_mode((800, 400))
 pygame.display.set_caption("Runner")
