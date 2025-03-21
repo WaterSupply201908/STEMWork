@@ -1,0 +1,1 @@
+- [Link](https://www.perplexity.ai/search/please-analyze-meaning-sQRafYeTRdmh.N7eCLj5Pw#2)
