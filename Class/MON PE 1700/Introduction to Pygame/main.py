@@ -1,6 +1,6 @@
 import pygame
 from sys import exit
-from random import randint
+from random import randint, choice
 
 class Player(pygame.sprite.Sprite) : # parent class (pygame.sprite.Sprite) -> child class (Player)
     def __init__(self) :
@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite) : # parent class (pygame.sprite.Sprite) -> ch
         self.player_index = 0
         self.player_jump = pygame.image.load('jump.png').convert_alpha()
         self.image = self.play_walk[self.player_index]
-        self.rect = self.image.get_rect(midbottom=(200, 300))
+        self.rect = self.image.get_rect(midbottom=(80, 300))
         self.gravity = 0
 
     def player_input(self) :
@@ -61,6 +61,23 @@ class Obstacle(pygame.sprite.Sprite) :
         self.image = self.frames[self.animation_index]
         self.rect = self.image.get_rect(midbottom=(randint(900, 1100), y_pos))
 
+    def animation_state(self) :
+        self.animation_index += 0.1
+
+        if self.animation_index >= len(self.frames) :
+            self.animation_index = 0
+
+        self.image = self.frames[int(self.animation_index)]
+
+    def update(self) :
+        self.animation_state()
+        self.rect.x -= 6
+        self.destroy()
+
+    def destroy(self) :
+        if self.rect.x <= -100 :
+            self.kill()
+
 def display_score() :
     current_time = int(pygame.time.get_ticks()/1000) - start_time
     score_surface = test_font.render(f'Score : {current_time}', False, 'Black')
@@ -92,6 +109,14 @@ def collision(player, obstacles) :
                 return False
 
     return True
+
+def collision_sprite() :
+    if pygame.sprite.spritecollide(player.sprite, obstacle_group, True) :
+        obstacle_group.empty()
+
+        return False
+    else :
+        return True
 
 def player_animation() :
     global player_surface, player_index
@@ -142,8 +167,10 @@ game_name_rect = game_name.get_rect(center=(400, 80))
 game_message = test_font.render('Press <space> to run...', False, (111, 196, 169))
 game_message_rect = game_name.get_rect(center=(320, 320))
 
-player =pygame.sprite.GroupSingle()
+player = pygame.sprite.GroupSingle()
 player.add(Player())
+
+obstacle_group = pygame.sprite.Group()
 
 obstacle_time = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacle_time, 1500)
@@ -177,10 +204,7 @@ while True :
                 if e.key == pygame.K_SPACE and player_rect.bottom >= 300 :
                     player_gravity = -20
             if e.type == obstacle_time :
-                if randint(0, 2) :
-                    obstacle_rect_list.append(snail_surface.get_rect(midbottom=(randint(900, 1100), 300)))
-                else :
-                    obstacle_rect_list.append(fly_surface.get_rect(midbottom=(randint(900, 1100), 210)))
+                obstacle_group.add(Obstacle(choice(['fly', 'snail', 'snail', 'snail'])))
             if e.type == snail_animation_timer :
                 if snail_frame_index == 0 :
                     snail_frame_index = 1
@@ -209,18 +233,23 @@ while True :
         if snail_rect.right <= 0 :
             snail_rect.left = 800
         screen.blit(snail_surface, snail_rect)
-        player_gravity += 1
-        player_rect.y += player_gravity
-        if player_rect.bottom >= 300 :
-            player_rect.bottom = 300
-        player_animation()
-        screen.blit(player_surface, player_rect)
+#        player_gravity += 1
+#        player_rect.y += player_gravity
+#        if player_rect.bottom >= 300 :
+#            player_rect.bottom = 300
+#        player_animation()
+#        screen.blit(player_surface, player_rect)
+
         player.draw(screen)
         player.update()
 
-        obstacle_rect_list = obstacle_movement(obstacle_rect_list)
+        obstacle_group.draw(screen)
+        obstacle_group.update()
 
-        game_active = collision(player_rect, obstacle_rect_list)
+#        obstacle_rect_list = obstacle_movement(obstacle_rect_list)
+
+#        game_active = collision(player_rect, obstacle_rect_list)
+        game_active = collision_sprite()
     else :
         screen.fill((94, 129, 162))
         screen.blit(player_stand, player_stand_rect)
