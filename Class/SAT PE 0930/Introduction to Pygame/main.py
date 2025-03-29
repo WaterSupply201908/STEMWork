@@ -1,6 +1,13 @@
+# Refactor
+# functional programming -> object oriented programming (OOP)
+
 import pygame
 from sys import exit
 from random import randint
+
+class Player(pygame.sprite.Sprite) :
+  def __init__(self) :
+    pass
 
 def display_score() :
   current_time = int(pygame.time.get_ticks()/1000) - start_time
@@ -33,7 +40,20 @@ def collision(player, obstacles) :
         return False
 
   return True
-  
+
+def player_animation() :
+  global player_surface, player_index
+
+  if player_rect.bottom < 300 :
+    player_surface = player_jump
+  else :
+    player_index += 0.1
+
+    if player_index >= len(player_walk) :
+      player_index = 0
+
+    player_surface = player_walk[int(player_index)]
+
 # Main program
 pygame.init()
 screen = pygame.display.set_mode((800, 400))
@@ -43,11 +63,17 @@ test_font = pygame.font.Font('Runner/Pixeltype.ttf', 50)
 
 sky_surface = pygame.image.load('Runner/Sky.png').convert_alpha()
 ground_surface = pygame.image.load('Runner/ground.png').convert_alpha()
-#score_surface = test_font.render('My Game', False, 'Black')
-#score_rect = score_surface.get_rect(center = (400, 50))
 
-snail_surface = pygame.image.load('Runner/snail1.png').convert_alpha()
-fly_surface = pygame.image.load('Runner/Fly1.png').convert_alpha()
+snail_frame_1 = pygame.image.load('Runner/snail1.png').convert_alpha()
+snail_frame_2 = pygame.image.load('Runner/snail2.png').convert_alpha()
+snail_frame = [snail_frame_1, snail_frame_2]
+snail_index = 0
+snail_surface = snail_frame[snail_index]
+fly_frame_1 = pygame.image.load('Runner/Fly1.png').convert_alpha()
+fly_frame_2 = pygame.image.load('Runner/Fly2.png').convert_alpha()
+fly_frame = [fly_frame_1, fly_frame_2]
+fly_index = 0
+fly_surface = fly_frame[fly_index]
 
 obstacle_rect_list = []
 
@@ -61,12 +87,24 @@ game_name_rect = game_name.get_rect(center=(400, 80))
 game_message = test_font.render('Press <space> to run...', False, (111, 196, 169))
 game_message_rect = game_message.get_rect(center=(400, 320))
 
-player_surface = pygame.image.load('Runner/player_walk_1.png').convert_alpha()
+player_walk_1 = pygame.image.load('Runner/player_walk_1.png').convert_alpha()
+player_walk_2 = pygame.image.load('Runner/player_walk_2.png').convert_alpha()
+player_walk = [player_walk_1, player_walk_2]
+player_index = 0
+player_jump = pygame.image.load('Runner/jump.png').convert_alpha()
+
+player_surface = player_walk[player_index]
 player_rect = player_surface.get_rect(midbottom=(80, 300))
 player_gravity = 0
 
 obstacle_time = pygame.USEREVENT + 1
 pygame.time.set_timer(obstacle_time, 1800)
+
+snail_animation_timer = pygame.USEREVENT + 2
+pygame.time.set_timer(snail_animation_timer, 500)
+
+fly_animation_timer = pygame.USEREVENT + 3
+pygame.time.set_timer(fly_animation_timer, 200)
 
 game_active = False
 start_time = 0
@@ -86,6 +124,18 @@ while True :
           obstacle_rect_list.append(snail_surface.get_rect(midbottom=(randint(900, 1100), 300)))
         else :
           obstacle_rect_list.append(fly_surface.get_rect(midbottom=(randint(900, 1100), 210)))
+      if e.type == snail_animation_timer :
+        if snail_index == 0 :
+          snail_index = 1
+        else :
+          snail_index = 0
+        snail_surface = snail_frame[snail_index]
+      if e.type == fly_animation_timer :
+        if fly_index == 0 :
+          fly_index = 1
+        else :
+          fly_index = 0
+        fly_surface = fly_frame[fly_index]
     else :
       if e.type == pygame.KEYDOWN and e.key == pygame.K_SPACE :
         game_active = True
@@ -94,14 +144,14 @@ while True :
   if game_active :
     screen.blit(sky_surface, (0, 0))
     screen.blit(ground_surface, (0, 300))
-    #pygame.draw.rect(screen, 'pink', score_rect, border_radius=10)
-    #screen.blit(score_surface, score_rect)
+
     score = display_score()
 
     player_gravity += 1
     player_rect.y += player_gravity
     if player_rect.bottom >= 300 :
       player_rect.bottom = 300
+    player_animation()
     screen.blit(player_surface, player_rect)
 
     obstacle_rect_list = obstacle_movement(obstacle_rect_list)
