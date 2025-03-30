@@ -1,5 +1,5 @@
 # Date
-2025-02-15
+2025-03-29
 
 # Notebook
 Tutor : LAP021
@@ -16,3 +16,4 @@ TW SAT 15:30/Calculator/
 
 # Accounts
 - Tutor : codon-bevy0k@icloud.com
+- 賴彥愷 : paired.07.whoop@icloud.com / stemwork123
