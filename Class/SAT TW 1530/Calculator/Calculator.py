@@ -29,7 +29,15 @@ class Calculator(ctk.CTk) :
     OutputLabel(self, 0, 'SE', main_font, self.formula_string)
     OutputLabel(self, 1, 'E', result_font, self.result_string)
 
-    Button(parent=self, text='AC', col=0, row=2)
+    Button(parent=self,
+           text=OPERATORS['clear']['text'],
+           func=self.clear,
+           col=OPERATORS['clear']['col'],
+           row=OPERATORS['clear']['row'],
+           font=main_font)
+
+  def clear(self) :
+    print('clear')
 
 class OutputLabel(ctk.CTkLabel) :
   def __init__(self, parent, row, anchor, font, string_var) :
