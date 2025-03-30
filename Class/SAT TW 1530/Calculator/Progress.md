@@ -16,4 +16,4 @@ TW SAT 15:30/Calculator/
 
 # Accounts
 - Tutor : codon-bevy0k@icloud.com
-- 賴彥愷 : paired.07.whoop@icloud.com / stemwork123
+- 賴彥愷 : paired.07.whoop@icloud.com
