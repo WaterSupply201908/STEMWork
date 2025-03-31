@@ -13,12 +13,15 @@ class Player(pygame.sprite.Sprite) : # parent class (pygame.sprite.Sprite) -> ch
         self.image = self.play_walk[self.player_index]
         self.rect = self.image.get_rect(midbottom=(80, 300))
         self.gravity = 0
+        self.jump_sound = pygame.mixer.Sound('jump.mp3')
+        self.jump_sound.set_volume(0.3)
 
     def player_input(self) :
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_SPACE] and self.rect.bottom >= 300 :
             self.gravity = -20
+            self.jump_sound.play()
 
     def apply_gravity(self) :
         self.gravity += 1
@@ -147,7 +150,7 @@ snail_frame_2 = pygame.image.load('snail2.png').convert_alpha()
 snail_frame = [snail_frame_1, snail_frame_2]
 snail_frame_index = 0
 snail_surface = snail_frame[snail_frame_index]
-snail_rect = snail_surface.get_rect(midbottom=(600, 300))
+#snail_rect = snail_surface.get_rect(midbottom=(600, 300))
 
 fly_frame_1 = pygame.image.load('fly1.png').convert_alpha()
 fly_frame_2 = pygame.image.load('fly2.png').convert_alpha()
@@ -193,6 +196,9 @@ player_gravity = 0
 game_active = False
 start_time = 0
 score = 0
+bg_music = pygame.mixer.Sound('music.wav')
+bg_music.set_volume(0.1)
+bg_music.play(loops=-1)
 
 while True :
     for e in pygame.event.get() :
@@ -229,10 +235,10 @@ while True :
         # pygame.draw.rect(screen, '#C0E8EC', score_rect)
         # screen.blit(score_surface, score_rect)
 
-        snail_rect.x -= 4
-        if snail_rect.right <= 0 :
-            snail_rect.left = 800
-        screen.blit(snail_surface, snail_rect)
+#        snail_rect.x -= 4
+#        if snail_rect.right <= 0 :
+#            snail_rect.left = 800
+#        screen.blit(snail_surface, snail_rect)
 #        player_gravity += 1
 #        player_rect.y += player_gravity
 #        if player_rect.bottom >= 300 :
