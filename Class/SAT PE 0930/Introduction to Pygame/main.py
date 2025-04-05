@@ -7,7 +7,52 @@ from random import randint
 
 class Player(pygame.sprite.Sprite) :
   def __init__(self) :
-    pass
+    super().__init__()
+
+    player_walk_1 = pygame.image.load('Runner/player_walk_1.png').convert_alpha()
+    player_walk_2 = pygame.image.load('Runner/player_walk_2.png').convert_alpha()
+    self.player_walk = [player_walk_1, player_walk_2]
+    self.player_index = 0
+    self.player_jump = pygame.image.load('Runner/jump.png').convert_alpha()
+    self.image = self.player_walk[self.player_index]
+    self.rect = self.image.get_rect(midbottom=(200, 300))
+    self.gravity = 0
+
+  def player_input(self) :
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_SPACE] and self.rect.bottom >= 300 :
+      self.gravity = -25
+
+  def apply_gravity(self) :
+    self.gravity += 1
+    self.rect.y += self.gravity
+    if self.rect.bottom >= 300 :
+      self.rect.bottom = 300
+
+  def animation_state(self) :
+    if self.rect.bottom < 300 :
+      self.image = self.player_jump
+    else :
+      self.player_index += 0.1
+
+      if self.player_index >= len(self.player_walk) :
+        self.player_index = 0
+      self.image = self.player_walk[int(self.player_index)]
+
+  def update(self) :
+    self.player_input()
+    self.apply_gravity()
+    self.animation_state()
+
+class Obstacle(pygame.sprite.Sprite) :
+  def __init__(self, type) :
+    super().__init__()
+    if type == 'fly' :
+      pass
+    else :
+      pass
+    self.image = None
+    self.rect = None
 
 def display_score() :
   current_time = int(pygame.time.get_ticks()/1000) - start_time
@@ -110,6 +155,9 @@ game_active = False
 start_time = 0
 score = 0
 
+player = pygame.sprite.GroupSingle()
+player.add(Player())
+
 while True :
   for e in pygame.event.get() :
     if e.type == pygame.QUIT :
@@ -153,6 +201,8 @@ while True :
       player_rect.bottom = 300
     player_animation()
     screen.blit(player_surface, player_rect)
+    player.draw(screen)
+    player.update()
 
     obstacle_rect_list = obstacle_movement(obstacle_rect_list)
     
