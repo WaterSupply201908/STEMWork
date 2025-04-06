@@ -14,3 +14,7 @@ class Button(CTkButton) :
       text_color=COLORS[color]['text']
     )
     self.grid(column=col, row=row, sticky='NSEW')
+
+class ImageButton(CTkButton) :
+  def __init__(self) :
+    pass
