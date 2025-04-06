@@ -30,14 +30,24 @@ class Calculator(ctk.CTk) :
     OutputLabel(self, 1, 'E', result_font, self.result_string)
 
     Button(parent=self,
-           text=OPERATORS['clear']['text'],
-           func=self.clear,
-           col=OPERATORS['clear']['col'],
-           row=OPERATORS['clear']['row'],
+             text=OPERATORS['clear']['text'],
+             func=self.clear,
+             col=OPERATORS['clear']['col'],
+             row=OPERATORS['clear']['row'],
+             font=main_font)
+
+    Button(parent=self,
+           text=OPERATORS['percent']['text'],
+           func=self.percent,
+           col=OPERATORS['percent']['col'],
+           row=OPERATORS['percent']['row'],
            font=main_font)
 
   def clear(self) :
     print('clear')
+
+  def percent(self) :
+    print('percent')
 
 class OutputLabel(ctk.CTkLabel) :
   def __init__(self, parent, row, anchor, font, string_var) :
