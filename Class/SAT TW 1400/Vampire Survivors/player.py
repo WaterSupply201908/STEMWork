@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite) : # parent class
     super().__init__(groups)
     self.image = pygame.image.load(join('VampireSurvivors', 'image', 'player', 'down', '0.png')).convert_alpha()
     self.rect = self.image.get_frect(center = pos)
-    self.hitbox_rect = self.rect.inflate(-40, 0)
+    self.hitbox_rect = self.rect.inflate(-60, -60)
 
     self.direction = pygame.Vector2(1, 0)
     self.speed = 500
