@@ -3,6 +3,7 @@ from player import Player # Player()
 from sprite import *
 from random import randint
 from pytmx.util_pygame import load_pygame
+from groups import AllSprites
 
 class Game :
   def __init__(self) :
@@ -12,12 +13,12 @@ class Game :
     pygame.display.set_caption('Vampire Survivors')
     self.clock = pygame.time.Clock()
     self.running = True
-    self.all_sprites = pygame.sprite.Group()
+    self.all_sprites = AllSprites()
     self.collision_sprites = pygame.sprite.Group()
 
     self.setup()
     
-    self.player = Player((500, 300), self.all_sprites, self.collision_sprites)
+    #self.player = Player((500, 300), self.all_sprites, self.collision_sprites)
     #for i in range(6) :
     #  x, y = randint(0, WINDOW_WIDTH), randint(0, WINDOW_HEIGHT)
     #  w, h = randint(60, 100), randint(50, 120)
@@ -33,7 +34,11 @@ class Game :
       CollisionSprite((obj.x, obj.y), obj.image, (self.all_sprites, self.collision_sprites))
 
     for obj in map.get_layer_by_name('Collisions') :
-      CollisionSprite((obj.x, obj.y), pygame.Surface((obj.width, obj.height)), self.collision_sprites)
+      CollisionSprite((obj.x, obj.y), pygame.Surface((obj.width, obj.height)), (self.collision_sprites))
+
+    for obj in map.get_layer_by_name('Entities') :
+      if obj.name == 'Player' :
+        self.player = Player((obj.x, obj.y), self.all_sprites, self.collision_sprites)
   
   def run(self) :
     while self.running :
@@ -45,7 +50,7 @@ class Game :
 
       self.all_sprites.update(dt)
       self.display_surface.fill('black')
-      self.all_sprites.draw(self.display_surface)
+      self.all_sprites.draw(self.player.rect.center)
       pygame.display.update()
 
     pygame.quit()
