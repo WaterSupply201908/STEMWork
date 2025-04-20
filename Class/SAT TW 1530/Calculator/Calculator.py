@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import darkdetect
 from Setting import *
-from Button import Button, ImageButton
+from Button import Button, ImageButton, NumButton, MathButton
 from PIL import Image
 
 class Calculator(ctk.CTk) :
@@ -45,8 +45,8 @@ class Calculator(ctk.CTk) :
            font=main_font)
 
     invert_image = ctk.CTkImage(
-        light_image=Image.open(OPERATORS['invert']['image path']['light']),
-        dark_image=Image.open(OPERATORS['invert']['image path']['dark'])
+      dark_image=Image.open(OPERATORS['invert']['image path']['light']),
+      light_image=Image.open(OPERATORS['invert']['image path']['dark'])
     )
     ImageButton(
       parent=self,
@@ -57,6 +57,28 @@ class Calculator(ctk.CTk) :
       image=invert_image
     )
 
+    for num, data in NUM_POSITIONS.items() :
+      NumButton(
+        parent=self,
+        text=num,
+        func=self.num_press,
+        col=data['col'],
+        row=data['row'],
+        font=main_font,
+        span=data['span']
+      )
+
+    for operator, data in MATH_POSITIONS.items() :
+      MathButton(
+        parent=self,
+        text=data['character'],
+        operator=operator,
+        func=self.math_press,
+        col=data['col'],
+        row=data['row'],
+        font=main_font
+      )
+
   def clear(self) :
     print('clear')
 
@@ -65,6 +87,12 @@ class Calculator(ctk.CTk) :
 
   def invert(self) :
     print('invert')
+
+  def num_press(self, value) :
+    print(value)
+
+  def math_press(self, value) :
+    print(value)
 
 class OutputLabel(ctk.CTkLabel) :
   def __init__(self, parent, row, anchor, font, string_var) :
