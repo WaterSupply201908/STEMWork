@@ -19,7 +19,7 @@ while running :
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN and rect_visible :
             reaction_time = pygame.time.get_ticks() - start_time
-            print(f'Reaction Time : {reaction_time}ms')
+            print(f'Reaction Time : {reaction_time} ms')
             rect_visible = False
 
     screen.fill((0, 0, 0))
