@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import darkdetect
 from Setting import *
-from Button import Button, ImageButton, NumButton, MathButton
+from Button import Button, ImageButton, NumButton, MathButton, MathImageButton
 from PIL import Image
 
 class Calculator(ctk.CTk) :
@@ -18,6 +18,7 @@ class Calculator(ctk.CTk) :
 
     self.result_string = ctk.StringVar(value='0')
     self.formula_string = ctk.StringVar(value='')
+    self.display_nums = []
 
     self.create_widgets()
 
@@ -69,15 +70,28 @@ class Calculator(ctk.CTk) :
       )
 
     for operator, data in MATH_POSITIONS.items() :
-      MathButton(
-        parent=self,
-        text=data['character'],
-        operator=operator,
-        func=self.math_press,
-        col=data['col'],
-        row=data['row'],
-        font=main_font
-      )
+      if data['image path'] :
+        MathImageButton(
+          parent=self,
+          operator=operator,
+          func=self.math_press,
+          col=data['col'],
+          row=data['row'],
+          image=ctk.CTkImage(
+            light_image=Image.open(data['image path']['dark']),
+            dark_image=Image.open(data['image path']['light'])
+          )
+        )
+      else :
+        MathButton(
+          parent=self,
+          text=data['character'],
+          operator=operator,
+          func=self.math_press,
+          col=data['col'],
+          row=data['row'],
+          font=main_font
+        )
 
   def clear(self) :
     print('clear')
@@ -89,10 +103,14 @@ class Calculator(ctk.CTk) :
     print('invert')
 
   def num_press(self, value) :
-    print(value)
+    self.display_nums.append(f'{value}')
+    full_number = ''.join(self.display_nums)
+    self.result_string.set(full_number)
 
   def math_press(self, value) :
-    print(value)
+    current_number = ''.join(self.display_nums)
+    if current_number :
+      print('yes')
 
 class OutputLabel(ctk.CTkLabel) :
   def __init__(self, parent, row, anchor, font, string_var) :
