@@ -122,21 +122,6 @@ def main_game():
         pygame.draw.rect(screen, (c1, c2, c3), (0, 0, WIDTH, 40))
         pygame.draw.rect(screen, (c3, c2, c1), (0, HEIGHT - 40, WIDTH, 40))
 
-        # Draw exit button at top right
-        exit_rect = pygame.Rect(WIDTH - 100, 0, 100, 40)
-        mouse_pos = pygame.mouse.get_pos()
-        if exit_rect.collidepoint(mouse_pos):
-            pygame.draw.rect(screen, LIGHT_GREY, exit_rect)
-        else:
-            pygame.draw.rect(screen, DARK_GREY, exit_rect)
-        draw_text('Exit', font_small, WHITE, WIDTH - 80, 5)
-
-        # Exit on click
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN and exit_rect.collidepoint(event.pos):
-                pygame.quit()
-                sys.exit()
-
         # Draw player
         player_rect = pygame.Rect(lead_x_local, lead_y_local, player_size, player_size)
         pygame.draw.rect(screen, player_color, player_rect)
