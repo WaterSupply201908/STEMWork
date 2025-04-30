@@ -36,24 +36,24 @@ font_tiny = pygame.font.SysFont('Corbel', 25)
 lead_x = 40
 lead_y = HEIGHT // 2
 player_size = 40
-enemy_size = 50
+obstacle_size = 50
 
-# Enemy positions
-enemy1_pos = [WIDTH, random.randint(50, HEIGHT - 50)]
-enemy2_pos = [random.randint(WIDTH, WIDTH + 100), random.randint(50, HEIGHT - 100)]
+# Obstacle positions
+enemy_pos = [WIDTH, random.randint(50, HEIGHT - 50)]
+food_pos = [random.randint(WIDTH, WIDTH + 100), random.randint(50, HEIGHT - 100)]
 
 # Game speed and score
 speed = 15
 score = 0
 
-def draw_text(text, font, color, x, y):
+def draw_text(text, font, color, x, y) :
     """Helper function to draw text on screen."""
     surface = font.render(text, True, color)
     screen.blit(surface, (x, y))
 
-def game_over_screen():
+def game_over_screen() :
     """Display the game over screen with options to restart or exit."""
-    while True:
+    while True :
         screen.fill(BG_COLOR)
         mouse_pos = pygame.mouse.get_pos()
 
@@ -62,14 +62,14 @@ def game_over_screen():
         restart_rect = pygame.Rect(WIDTH - 180, HEIGHT - 100, 80, 20)
 
         # Draw buttons with hover effect
-        if exit_rect.collidepoint(mouse_pos):
+        if exit_rect.collidepoint(mouse_pos) :
             pygame.draw.rect(screen, LIGHT_GREY, exit_rect)
-        else:
+        else :
             pygame.draw.rect(screen, DARK_GREY, exit_rect)
 
-        if restart_rect.collidepoint(mouse_pos):
+        if restart_rect.collidepoint(mouse_pos) :
             pygame.draw.rect(screen, LIGHT_GREY, restart_rect)
-        else:
+        else :
             pygame.draw.rect(screen, DARK_GREY, restart_rect)
 
         # Draw texts
@@ -77,45 +77,45 @@ def game_over_screen():
         draw_text('Exit', font_tiny, WHITE, exit_rect.x + 5, exit_rect.y)
         draw_text('Restart', font_tiny, WHITE, restart_rect.x + 10, restart_rect.y)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for event in pygame.event.get() :
+            if event.type == pygame.QUIT :
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if exit_rect.collidepoint(event.pos):
+            if event.type == pygame.MOUSEBUTTONDOWN :
+                if exit_rect.collidepoint(event.pos) :
                     pygame.quit()
                     sys.exit()
-                elif restart_rect.collidepoint(event.pos):
+                elif restart_rect.collidepoint(event.pos) :
                     main_game()
 
         pygame.display.update()
         clock.tick(60)
 
-def main_game():
+def main_game() :
     """Main game loop."""
     global speed, score
     lead_x_local = lead_x
     lead_y_local = lead_y
-    enemy1 = enemy1_pos[:]
-    enemy2 = enemy2_pos[:]
+    enemy = enemy_pos[:]
+    food = food_pos[:]
     speed_local = speed
     score_local = score
 
     running = True
-    while running:
+    while running :
         screen.fill(BG_COLOR)
         clock.tick(speed_local)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for event in pygame.event.get() :
+            if event.type == pygame.QUIT :
                 pygame.quit()
                 sys.exit()
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_UP] :
             lead_y_local -= 10
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN] :
             lead_y_local += 10
 
         # Draw top and bottom bars
@@ -126,39 +126,39 @@ def main_game():
         player_rect = pygame.Rect(lead_x_local, lead_y_local, player_size, player_size)
         pygame.draw.rect(screen, player_color, player_rect)
 
-        # Move enemy1
-        if enemy1[0] > 0:
-            enemy1[0] -= 10
+        # Move enemy
+        if enemy[0] > 0 :
+            enemy[0] -= 10
         else:
-            enemy1[0] = WIDTH
-            enemy1[1] = random.randint(enemy_size, HEIGHT - enemy_size)
+            enemy[0] = WIDTH
+            enemy[1] = random.randint(obstacle_size, HEIGHT - obstacle_size)
 
-        # Move enemy2
-        if enemy2[0] > 0:
-            enemy2[0] -= 10
+        # Move food
+        if food[0] > 0 :
+            food[0] -= 10
         else:
-            enemy2[0] = WIDTH + 100
-            enemy2[1] = random.randint(enemy_size, HEIGHT - enemy_size)
+            food[0] = WIDTH + 100
+            food[1] = random.randint(obstacle_size, HEIGHT - obstacle_size)
 
         # Draw enemies
-        enemy1_rect = pygame.Rect(enemy1[0], enemy1[1], enemy_size, enemy_size)
-        enemy2_rect = pygame.Rect(enemy2[0], enemy2[1], enemy_size, enemy_size)
-        pygame.draw.rect(screen, RED, enemy1_rect)
-        pygame.draw.rect(screen, BLUE, enemy2_rect)
+        enemy_rect = pygame.Rect(enemy[0], enemy[1], obstacle_size, obstacle_size)
+        food_rect = pygame.Rect(food[0], food[1], obstacle_size, obstacle_size)
+        pygame.draw.rect(screen, RED, enemy_rect)
+        pygame.draw.rect(screen, BLUE, food_rect)
 
         # Collision detection
-        if player_rect.colliderect(enemy1_rect):
+        if player_rect.colliderect(enemy_rect) :
             game_over_screen()
 
-        if player_rect.colliderect(enemy2_rect):
-            # Reset enemy2 position and increase score and speed
-            enemy2[0] = WIDTH + 100
-            enemy2[1] = random.randint(enemy_size, HEIGHT - enemy_size)
+        if player_rect.colliderect(food_rect) :
+            # Reset food position and increase score and speed
+            food[0] = WIDTH + 100
+            food[1] = random.randint(obstacle_size, HEIGHT - obstacle_size)
             score_local += 1
             speed_local = min(speed_local + 1, 60)  # Cap speed at 60
 
         # Check boundaries
-        if lead_y_local <= 38 or lead_y_local >= HEIGHT - 38 or enemy2[0] <= 0:
+        if lead_y_local <= 38 or lead_y_local >= HEIGHT - 38 or food[0] <= 0 :
             game_over_screen()
 
         # Draw score
@@ -166,8 +166,8 @@ def main_game():
 
         pygame.display.update()
 
-def intro_screen():
-    """Intro screen with Start, Options, and Exit buttons."""
+def intro_screen() :
+    """Intro screen with Start and Exit buttons."""
     colox_c1 = 0
     colox_c2 = 0
 
@@ -177,22 +177,22 @@ def intro_screen():
     button_height = 40
 
     running = True
-    while running:
+    while running :
         screen.fill(BG_COLOR)
         mouse_pos = pygame.mouse.get_pos()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for event in pygame.event.get() :
+            if event.type == pygame.QUIT :
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN :
                 # Start button
                 start_rect = pygame.Rect(button_x, button_y, button_width, button_height)
-                exit_rect = pygame.Rect(button_x, button_y + 140, button_width, button_height)
-                if start_rect.collidepoint(event.pos):
+                exit_rect = pygame.Rect(button_x, button_y + 70, button_width, button_height)
+                if start_rect.collidepoint(event.pos) :
                     main_game()
-                elif exit_rect.collidepoint(event.pos):
+                elif exit_rect.collidepoint(event.pos) :
                     pygame.quit()
                     sys.exit()
 
@@ -205,20 +205,18 @@ def intro_screen():
 
         # Buttons rectangles
         start_rect = pygame.Rect(button_x, button_y, button_width, button_height)
-        options_rect = pygame.Rect(button_x, button_y + 70, button_width + 40, button_height)
-        exit_rect = pygame.Rect(button_x, button_y + 140, button_width, button_height)
+        exit_rect = pygame.Rect(button_x, button_y + 70, button_width, button_height)
 
         # Draw buttons with hover effect
-        for rect in [start_rect, options_rect, exit_rect]:
-            if rect.collidepoint(mouse_pos):
+        for rect in [start_rect, exit_rect] :
+            if rect.collidepoint(mouse_pos) :
                 pygame.draw.rect(screen, LIGHT_GREY, rect)
             else:
                 pygame.draw.rect(screen, DARK_GREY, rect)
 
         # Draw button texts
         draw_text('Start', font_small, WHITE, button_x + 10, button_y + 5)
-        draw_text('Options', font_small, WHITE, button_x + 10, button_y + 75)
-        draw_text('Exit', font_small, WHITE, button_x + 10, button_y + 145)
+        draw_text('Exit', font_small, WHITE, button_x + 10, button_y + 75)
 
         # Draw title text "Colox" with dynamic color
         colox_color = (c1, colox_c1, colox_c2)
@@ -227,5 +225,5 @@ def intro_screen():
         pygame.display.update()
         clock.tick(60)
 
-if __name__ == "__main__":
+if __name__ == "__main__" :
     intro_screen()
