@@ -51,7 +51,7 @@ class Player(pygame.sprite.Sprite) : # parent class
     self.frames = {'left' : [], 'right' : [], 'up' : [], 'down' : []}
 
     for state in self.frames.keys() :
-      for folder_path, sub_folder, filenames in walk(join('images', 'player', state)) :
+      for folder_path, sub_folder, filenames in walk(join('VampireSurvivors', 'image', 'player', state)) :
         if filenames :
           for filename in sorted(filenames, key=lambda name:int(name.split('.')[0])) :
             full_path = join(folder_path, filename)
@@ -64,5 +64,5 @@ class Player(pygame.sprite.Sprite) : # parent class
     if self.direction.y != 0 :
       self.state = 'down' if self.direction.y > 0 else 'up'
 
-    self.frame_index += 5 * dt
+    self.frame_index += 5 * dt if self.direction else 0
     self.image = self.frames[self.state][int(self.frame_index) % len(self.frames[self.state])]
