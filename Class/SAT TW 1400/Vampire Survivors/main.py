@@ -24,6 +24,10 @@ class Game :
     #  w, h = randint(60, 100), randint(50, 120)
     #  CollisionSprite((x, y), (w, h), (self.all_sprites, self.collision_sprites))
 
+  def input(self) :
+    if pygame.mouse.get_pressed()[0] :
+      print('shoot')
+
   def setup(self) :
     map = load_pygame(join('VampireSurvivors', 'data', 'maps', 'world.tmx'))
 
@@ -39,6 +43,7 @@ class Game :
     for obj in map.get_layer_by_name('Entities') :
       if obj.name == 'Player' :
         self.player = Player((obj.x, obj.y), self.all_sprites, self.collision_sprites)
+        self.gun = Gun(self.player, self.all_sprites)
   
   def run(self) :
     while self.running :
@@ -48,6 +53,7 @@ class Game :
         if event.type == pygame.QUIT :
           self.running = False
 
+      self.input()
       self.all_sprites.update(dt)
       self.display_surface.fill('black')
       self.all_sprites.draw(self.player.rect.center)
