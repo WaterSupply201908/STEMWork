@@ -1,107 +1,198 @@
 import pygame
+import sys
 import random
 
 pygame.init()
-
 WIDTH, HEIGHT = 720, 720
-c1 = random.randint(125, 255)
-c2 = random.randint(0, 255)
-c3 = random.randint(0, 255)
-
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-color_list = [RED, GREEN, BLUE]
-
-colox_c1 = 0
-colox_c2 = 0
-colox_c3 = 254
-colox_c4 = 254
-
-player_c = random.choice(color_list)
-
-startl = (169, 169, 169)
-startd = (100, 100, 100)
 WHITE = (255, 255, 255)
-start = (255, 255, 255)
+DARK_GREY = (100, 100, 100)
+LIGHT_GREY = (169, 169, 169)
+BG_COLOR = (65, 25, 64)
 
-lead_x, lead_y = 40, HEIGHT / 2
-x, y = 300, 290
-width_i, height_i = 100, 40
-enemy_size = 50
+color_choices = [RED, GREEN, BLUE]
 
-text_font = pygame.font.SysFont('Corbel', 35)
-text_s = text_font.render('Start', True, WHITE)
-text_o = text_font.render('Options', True, WHITE)
-text_e = text_font.render('Exit', True, WHITE)
-colox = text_font.render('Colox', True, (c3, c2, c1))
+c1 = random.randint(125, 255)
+c2 = random.randint(0, 255)
+c3 = random.randint(0, 255)
 
-x1 = random.randint(int(WIDTH/2), WIDTH)
-y1 = random.randint(100, int(HEIGHT/2))
-x2, y2, = 40, 40
+player_color = random.choice(color_choices)
+
+font_small = pygame.font.SysFont('Corbel', 35)
+font_medium = pygame.font.SysFont('Corbel', 60)
+font_tiny = pygame.font.SysFont('Corbel', 25)
+
+lead_x = 40
+lead_y = HEIGHT // 2
+player_size = 40
+obstacle_size = 50
+
+enemy_pos = [WIDTH, random.randint(50, HEIGHT - 50)]
+food_pos = [random.randint(WIDTH, WIDTH + 100), random.randint(50, HEIGHT - 100)]
+
 speed = 15
+score = 0
 
-count = 0
-e1_p = [WIDTH, random.randint(50, HEIGHT-50)]
-e2_p = [random.randint(WIDTH, WIDTH+100), random.randint(50, HEIGHT-100)]
+def draw_text(text, font, color, x, y) :
+    surface = font.render(text, True, color)
+    screen.blit(surface, (x, y))
 
-pygame.draw.rect(screen, startd, [100, HEIGHT-100, 40, 20])
-pygame.draw.rect(screen, startd, [WIDTH-180, HEIGHT-100, 40, 50])
+def game_over_screen() :
+    while True :
+        screen.fill(BG_COLOR)
+        mouse_pos = pygame.mouse.get_pos()
 
-def intro(colox_c1, colox_c2, colox, text_e, text_o, text_s) :
-    intro = True
+        exit_rect = pygame.Rect(100, HEIGHT-100, 40, 20)
+        restart_rect = pygame.Rect(WIDTH-180, HEIGHT-100, 80, 20)
 
-    while intro :
+        if exit_rect.collidepoint(mouse_pos) :
+            pygame.draw.rect(screen, LIGHT_GREY, exit_rect)
+        else :
+            pygame.draw.rect(screen, DARK_GREY, exit_rect)
+
+        if restart_rect.collidepoint(mouse_pos) :
+            pygame.draw.rect(screen, LIGHT_GREY, restart_rect)
+        else :
+            pygame.draw.rect(screen, DARK_GREY, restart_rect)
+
+        draw_text('GAME OVER', font_medium, WHITE, WIDTH//2-150, HEIGHT//2-50)
+        draw_text('Exit', font_tiny, WHITE, exit_rect.x+5, exit_rect.y)
+        draw_text('Restart', font_tiny, WHITE, restart_rect.x+10, restart_rect.y)
+
         for event in pygame.event.get() :
             if event.type == pygame.QUIT :
                 pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN :
+                if exit_rect.collidepoint(event.pos) :
+                    pygame.quit()
+                    sys.exit()
+                elif restart_rect.collidepoint(event.pos) :
+                    main_game()
 
-        screen.fill((65, 25, 64))
-        mouse = pygame.mouse.get_pos()
-
-        if x < mouse[0] < x+width_i and y < mouse[1] < y+height_i :
-            pygame.draw.rect(screen, startl, [x, y, width_i, height_i])
-        else :
-            if x < mouse[0] < x+width_i+40 and y+70 < mouse[1] < y+height_i+70 :
-                pygame.draw.rect(screen, startl, [x, y+70, width_i+40, height_i])
-            else :
-                if x < mouse[0] < x+width_i and y+140 < mouse[1] < y+height_i+140 :
-                    pygame.draw.rect(screen, startl, [x, y+140, width_i, height_i])
-                else :
-                    pygame.draw.rect(screen, startl, [x, y, width_i, height_i])
-                    pygame.draw.rect(screen, startl, [x, y+70, width_i+40, height_i])
-                    pygame.draw.rect(screen, startl, [x, y+140, width_i, height_i])
-
-        if event.type == pygame.MOUSEBUTTONDOWN :
-            if x < mouse[0] < x+width_i and y < mouse[1] < y+height_i :
-                game(lead_x, lead_y, speed, count)
-            elif x < mouse[0] < x+width_i and y+140 < mouse[1] < y+height_i+140 :
-                pygame.quit()
-
-        pygame.draw.rect(screen, (c2, colox_c1, colox_c2), [0, 0, 40, HEIGHT])
-        pygame.draw.rect(screen, (c2, colox_c1, colox_c2), [WIDTH-40, 0, 40, HEIGHT])
-
-        text_font = pygame.font.SysFont('Corbel', 35)
-        text_s = text_font.render('Start', True, WHITE)
-        text_o = text_font.render('Options', True, WHITE)
-        text_e = text_font.render('Exit', True, WHITE)
-        colox = text_font.render('Colox', True, (c1, colox_c1, colox_c2))
-
-        screen.blit(text_s, (312, 295))
-        screen.blit(text_o, (312, 365))
-        screen.blit(text_e, (312, 435))
-        screen.blit(colox, (312, 50))
-
+        pygame.display.update()
         clock.tick(60)
+
+def main_game() :
+    global speed, score
+    lead_x_local = lead_x
+    lead_y_local = lead_y
+    enemy = enemy_pos[:]
+    food = food_pos[:]
+    speed_local = speed
+    score_local = score
+
+    running = True
+    while running :
+        screen.fill(BG_COLOR)
+        clock.tick(speed_local)
+
+        for event in pygame.event.get() :
+            if event.type == pygame.QUIT :
+                pygame.quit()
+                sys.exit()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP] :
+            lead_y_local -= 10
+        if keys[pygame.K_DOWN] :
+            lead_y_local += 10
+
+        pygame.draw.rect(screen, (c1, c2, c3), (0, 0, WIDTH, 40))
+        pygame.draw.rect(screen, (c3, c2, c1), (0, HEIGHT-40, WIDTH, 40))
+
+        player_rect = pygame.Rect(lead_x_local, lead_y_local, player_size, player_size)
+        pygame.draw.rect(screen, player_color, player_rect)
+
+        if enemy[0] > 0 :
+            enemy[0] -= 10
+        else :
+            enemy[0] = WIDTH
+            enemy[1] = random.randint(obstacle_size, HEIGHT-obstacle_size)
+
+        if food[0] > 0 :
+            food[0] -= 10
+        else :
+            food[0] = WIDTH + 100
+            food[1] = random.randint(obstacle_size, HEIGHT-obstacle_size)
+
+        enemy_rect = pygame.Rect(enemy[0], enemy[1], obstacle_size, obstacle_size)
+        food_rect = pygame.Rect(food[0], food[1], obstacle_size, obstacle_size)
+        pygame.draw.rect(screen, RED, enemy_rect)
+        pygame.draw.rect(screen, BLUE, food_rect)
+
+        if player_rect.colliderect(enemy_rect) :
+            game_over_screen()
+
+        if player_rect.colliderect(food_rect) :
+            food[0] = WIDTH + 100
+            food[1] = random.randint(obstacle_size, HEIGHT-obstacle_size)
+            score_local += 1
+            speed_local = min(speed_local+1, 60)
+
+        if lead_y_local <= 38 or lead_y_local >= HEIGHT-38 or food[0] <= 0 :
+            game_over_screen()
+
+        draw_text(f'Score: {score_local}', font_small, WHITE, WIDTH-120, HEIGHT-40)
+
         pygame.display.update()
 
-def game(lead_x, lead_y, speed, count) :
-    pass
+def intro_screen() :
+    colox_c1 = 0
+    colox_c2 = 0
 
-def game_over() :
-    pass
+    button_x = 300
+    button_y = 290
+    button_width = 100
+    button_height = 40
 
-intro(colox_c1, colox_c2, colox, text_e, text_o, text_s)
+    running = True
+    while running :
+        screen.fill(BG_COLOR)
+        mouse_pos = pygame.mouse.get_pos()
+
+        for event in pygame.event.get() :
+            if event.type == pygame.QUIT :
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN :
+                start_rect = pygame.Rect(button_x, button_y, button_width, button_height)
+                exit_rect = pygame.Rect(button_x, button_y + 70, button_width, button_height)
+                if start_rect.collidepoint(event.pos) :
+                    main_game()
+                elif exit_rect.collidepoint(event.pos) :
+                    pygame.quit()
+                    sys.exit()
+
+        colox_c1 = (colox_c1 + 1) % 255
+        colox_c2 = (colox_c2 + 1) % 255
+        side_color = (c2, colox_c1, colox_c2)
+        pygame.draw.rect(screen, side_color, (0, 0, 40, HEIGHT))
+        pygame.draw.rect(screen, side_color, (WIDTH - 40, 0, 40, HEIGHT))
+
+        start_rect = pygame.Rect(button_x, button_y, button_width, button_height)
+        exit_rect = pygame.Rect(button_x, button_y + 70, button_width, button_height)
+
+        for rect in [start_rect, exit_rect] :
+            if rect.collidepoint(mouse_pos) :
+                pygame.draw.rect(screen, LIGHT_GREY, rect)
+            else:
+                pygame.draw.rect(screen, DARK_GREY, rect)
+
+        draw_text('Start', font_small, WHITE, button_x + 10, button_y + 5)
+        draw_text('Exit', font_small, WHITE, button_x + 10, button_y + 75)
+
+        colox_color = (c1, colox_c1, colox_c2)
+        draw_text('Colox', font_small, colox_color, WIDTH // 2 - 30, 50)
+
+        pygame.display.update()
+        clock.tick(60)
+
+if __name__ == "__main__" :
+    intro_screen()
