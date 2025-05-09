@@ -18,9 +18,9 @@ class Player(pygame.sprite.Sprite) :
         self.direction = self.direction.normalize() if self.direction else self.direction
 
     def move(self, dt) :
-        self.rect.x += self.direction.x * self.speed * dt
+        self.hitbox_rect.x += self.direction.x * self.speed * dt
         self.collision('horizontal')
-        self.rect.y += self.direction.y * self.speed * dt
+        self.hitbox_rect.y += self.direction.y * self.speed * dt
         self.collision('vertical')
         self.rect.center = self.hitbox_rect.center
 
