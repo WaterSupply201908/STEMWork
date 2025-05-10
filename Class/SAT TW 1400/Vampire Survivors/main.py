@@ -13,10 +13,16 @@ class Game :
     pygame.display.set_caption('Vampire Survivors')
     self.clock = pygame.time.Clock()
     self.running = True
+    self.load_image()
     self.all_sprites = AllSprites()
     self.collision_sprites = pygame.sprite.Group()
+    self.bullet_sprites = pygame.sprite.Group()
 
     self.setup()
+
+    self.can_shoot = True
+    self.shoot_time = 0
+    self.gun_cooldown = 100
     
     #self.player = Player((500, 300), self.all_sprites, self.collision_sprites)
     #for i in range(6) :
@@ -24,9 +30,21 @@ class Game :
     #  w, h = randint(60, 100), randint(50, 120)
     #  CollisionSprite((x, y), (w, h), (self.all_sprites, self.collision_sprites))
 
+  def gun_timer(self) :
+    if not self.can_shoot :
+      current_time = pygame.time.get_ticks()
+      if current_time - self.shoot_time >= self.gun_cooldown :
+        self.can_shoot = True
+
+  def load_image(self) :
+    self.bullet_surf = pygame.image.load(join('VampireSurvivors', 'image', 'gun', 'bullet.png')).convert_alpha()
+
   def input(self) :
-    if pygame.mouse.get_pressed()[0] :
-      print('shoot')
+    if pygame.mouse.get_pressed()[0] and self.can_shoot :
+      pos = self.gun.rect.center + self.gun.player_direction * 50
+      Bullet(self.bullet_surf, pos, self.gun.player_direction, (self.all_sprites, self.bullet_sprites))
+      self.can_shoot = False
+      self.shoot_time = pygame.time.get_ticks()
 
   def setup(self) :
     map = load_pygame(join('VampireSurvivors', 'data', 'maps', 'world.tmx'))
@@ -53,6 +71,7 @@ class Game :
         if event.type == pygame.QUIT :
           self.running = False
 
+      self.gun_timer()
       self.input()
       self.all_sprites.update(dt)
       self.display_surface.fill('black')
