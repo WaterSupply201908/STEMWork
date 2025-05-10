@@ -45,3 +45,28 @@ class Gun(pygame.sprite.Sprite) :
     self.get_direction()
     self.rotate_gun()
     self.rect.center = self.player.rect.center + self.player_direction * self.distance
+
+class Bullet(pygame.sprite.Sprite) :
+  def __init__(self, surf, pos, direction, groups) :
+    super().__init__(groups)
+    self.image = surf
+    self.rect = self.image.get_frect(center = pos)
+    self.direction = direction
+    self.speed = 1200
+    self.spawn_time = pygame.time.get_ticks()
+    self.lifetime = 1000
+
+  def update(self, dt) :
+    self.rect.center += self.direction * self.speed * dt
+
+    if pygame.time.get_ticks() - self.spawn_time >= self.lifetime :
+      self.kill()
+
+class Enemy(pygame.sprite.Sprite) :
+  def __init__(self, pos, frames, groups, player, collision_sprites) :
+    super().__init__(groups)
+    self.player = player
+
+    self.frames, self.frame_index = frames, 0
+    self.image = self.frames[int(self.frame_index)]
+    self.animation_speed = 6
