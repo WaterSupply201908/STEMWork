@@ -11,6 +11,7 @@ class Main :
     def update(self) :
         self.snake.move_snake()
         self.check_collision()
+        self.check_fail()
 
     def draw_elements(self) :
         self.fruit.draw_fruit()
@@ -21,10 +22,23 @@ class Main :
             self.fruit.randomize()
             self.snake.add_block()
 
+    def game_over(self) :
+        pygame.quit()
+        sys.exit()
+
+    def check_fail(self) :
+        if not 0 <= self.snake.body[0].x < CELL_NUMBER or not 0 <= self.snake.body[0].y < CELL_NUMBER :
+            self.game_over()
+
+        for block in self.snake.body[1:] :
+            if block == self.snake.body[0] :
+                self.game_over()
+
 class Snake :
     def __init__(self) :
         self.body = [Vector2(5, 10), Vector2(6, 10), Vector2(7, 10)]
-        self.direction = Vector2(1, 0)
+        self.direction = Vector2(-1, 0)
+        self.new_block = False
 
     def draw_snake(self) :
         for block in self.body :
@@ -36,6 +50,7 @@ class Snake :
             body_copy = self.body[:]
             body_copy.insert(0, body_copy[0]+self.direction)
             self.body = body_copy
+            self.new_block = False
         else :
             body_copy = self.body[:-1]
             body_copy.insert(0, body_copy[0]+self.direction)
@@ -83,13 +98,17 @@ while True :
             main.update()
         if e.type == pygame.KEYDOWN :
             if e.key == pygame.K_UP :
-                main.snake.direction = Vector2(0, -1)
+                if main.snake.direction.y != 1 :
+                    main.snake.direction = Vector2(0, -1)
             if e.key == pygame.K_DOWN :
-                main.snake.direction = Vector2(0, 1)
+                if main.snake.direction.y != -1 :
+                    main.snake.direction = Vector2(0, 1)
             if e.key == pygame.K_LEFT :
-                main.snake.direction = Vector2(-1, 0)
+                if main.snake.direction.x != 1 :
+                    main.snake.direction = Vector2(-1, 0)
             if e.key == pygame.K_RIGHT :
-                main.snake.direction = Vector2(1, 0)
+                if main.snake.direction.x != -1 :
+                    main.snake.direction = Vector2(1, 0)
 
     # Game Logic
     screen.fill((175, 215, 70))
