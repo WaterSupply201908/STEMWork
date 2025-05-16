@@ -1,9 +1,9 @@
 # Date
-2025-05-09
+2025-05-16
 
 # Notebook
 - Tutor : LAP011 / MBA
-- Hugo : LAP013 / LAP012
+- Hugo : LAP013
 
 # Tool
 VS Code
