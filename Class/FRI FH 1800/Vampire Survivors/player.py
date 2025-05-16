@@ -5,11 +5,19 @@ class Player(pygame.sprite.Sprite) :
         super().__init__(groups)
         self.image = pygame.image.load(join('Image', 'Player', 'Down', '0.png')).convert_alpha()
         self.rect = self.image.get_frect(center=pos)
-        self.hitbox_rect = self.rect.inflate(-40, 0)
+        self.hitbox_rect = self.rect.inflate(-60, -60)
 
         self.direction = pygame.Vector2(1, 0)
         self.speed = 500
         self.collision_sprites = collision_sprites
+
+    def load_images(self) :
+        self.frames = {'left':[], 'right':[], 'up':[], 'down':[]}
+
+        for state in self.frames.keys() :
+            for folder_path, sub_folders, filenames in walk(join('Image', 'Player', state)) :
+                if file_names :
+                    pass
 
     def input(self) :
         keys = pygame.key.get_pressed()
