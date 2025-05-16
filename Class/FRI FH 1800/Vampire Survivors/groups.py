@@ -5,7 +5,15 @@ class AllSprites(pygame.sprite.Group) :
         super().__init__()
 
         self.display_surface = pygame.display.get_surface()
+        self.offset = pygame.Vector2()
 
-    def draw(self) :
-        for sprite in self :
-            self.display_surface.blit(sprite.image, sprite.rect)
+    def draw(self, target_pos) :
+        self.offset.x = -(target_pos[0] - WINDOW_WIDTH / 2)
+        self.offset.y = -(target_pos[1] - WINDOW_HEIGHT / 2)
+
+        groud_sprite = [sprite for sprite in self if hasattr(sprite, 'ground')]
+        object_sprite = [sprite for sprite in self if not hasattr(sprite, 'ground')]
+
+        for layer in [groud_sprite, object_sprite] :
+            for sprite in sorted(layer, key=lambda sprite : sprite.rect.centery) :
+                self.display_surface.blit(sprite.image, sprite.rect.topleft+self.offset)
