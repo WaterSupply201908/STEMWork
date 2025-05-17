@@ -70,3 +70,16 @@ class Enemy(pygame.sprite.Sprite) :
     self.frames, self.frame_index = frames, 0
     self.image = self.frames[int(self.frame_index)]
     self.animation_speed = 6
+
+    self.rect = self.image.get_frect(center = pos)
+    self.hitbox_rect = self.rect.inflate(-20, -40)
+    self.collision_sprites = collision_sprites
+    self.direction = pygame.Vector2()
+    self.speed = 200
+
+  def animate(self, dt) :
+    self.frame_index += self.animation_speed * dt
+    self.image = self.frames[int(self.frame_index) % len(self.frames)]
+
+  def update(self, dt) :
+    self.animate(dt)
