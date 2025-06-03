@@ -1,8 +1,8 @@
 # Date
-2025-05-27
+2025-06-03
 
 # Notebook
-- Tutor : LAP044
+- Tutor : LAP044 / desktop
 - Issac : LAP038 / LAP037
 - Jeffrey : LAP035
 
