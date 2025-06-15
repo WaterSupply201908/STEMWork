@@ -2,7 +2,7 @@
 2025-06-14
 
 # Notebook
-Tutor : LAP021
+Tutor : LAP021/
 
 # Tool
 replit.com
