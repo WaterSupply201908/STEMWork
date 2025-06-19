@@ -1,2 +1,2 @@
 - [Link](https://www.geeksforgeeks.org/python/how-to-make-flappy-bird-game-in-pygame/)
-- [Resoure](https://drive.google.com/drive/folders/1slswL541szNDXfaptHRHp4_XzSxBabHO?usp=sharing)
+- [tinyurl.com/flappybird-resource](https://drive.google.com/drive/folders/1slswL541szNDXfaptHRHp4_XzSxBabHO?usp=sharing)
