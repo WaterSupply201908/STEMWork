@@ -48,12 +48,12 @@ class Game :
                 self.spawn_positions.append((obj.x, obj.y))
 
     def load_image(self) :
-        self.bullet_surf = pygame.image.load(join('image', 'gun', 'bullet.png')).convert_alpha()
+        self.bullet_surf = pygame.image.load(join('Image', 'Gun', 'bullet.png')).convert_alpha()
 
-        folders = list(walk(join('image', 'enemies')))[0][1]
+        folders = list(walk(join('Image', 'Enemies')))[0][1]
         self.enemy_frames = {}
         for folder in folders :
-            for folder_path, _, filenames in walk(join('images', 'enemies', folder)) :
+            for folder_path, _, filenames in walk(join('Image', 'Enemies', folder)) :
                 self.enemy_frames[folder] = []
                 for filename in sorted(filenames, key=lambda name : int(name.split('.')[0])) :
                     full_path = join(folder_path, filename)
@@ -72,6 +72,16 @@ class Game :
             current_time = pygame.time.get_ticks()
             if current_time - self.shoot_time >= self.gun_cooldown :
                 self.can_shoot = True
+
+    def bullet_collision(self) :
+        if self.bullet_sprites :
+            for bullet in self.bullet_sprites :
+                collision_sprites = pygame.sprite.spritecollide(bullet, self.enemy_sprites, False, pygame.sprite.collide_mask)
+                if collision_sprites :
+                    for sprite in collision_sprites :
+                        sprite.destroy()
+
+                    bullet.kill()
 
     def run(self) :
         while self.running :
