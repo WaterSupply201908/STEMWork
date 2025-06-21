@@ -41,6 +41,42 @@ def draw_text(text, font, color, x, y) :
   surface = font.render(text, True, color)
   screen.blit(surface, (x, y))
 
+def game_over_screen() :
+  while True :
+    screen.fill(BG_COLOR)
+    mouse_pos = pygame.mouse.get_pos()
+
+    exit_rect = pygame.Rect(100, HEIGHT-100, 40, 20)
+    restart_rect = pygame.Rect(WIDTH-180, HEIGHT-100, 80, 20)
+
+    if exit_rect.collidepoint(mouse_pos) :
+      pygame.draw.rect(screen, LIGHT_GREY, exit_rect)
+    else :
+      pygame.draw.rect(screen, DARK_GREY, exit_rect)
+
+    if restart_rect.collidepoint(mouse_pos) :
+      pygame.draw.rect(screen, LIGHT_GREY, restart_rect)
+    else :
+      pygame.draw.rect(screen, DARK_GREY, restart_rect)
+
+    draw_text('GAME OVER', font_medium, WHITE, WIDTH//2-150, HEIGHT//2-50)
+    draw_text('Exit', font_tiny, WHITE, exit_rect.x+5, exit_rect.y)
+    draw_text('Restart', font_tiny, WHITE, restart_rect.x+10, exit_rect.y)
+
+    for event in pygame.event.get() :
+      if event.type == pygame.QUIT :
+        pygame.quit()
+        sys.exit()
+      if event.type == pygame.MOUSEBUTTONDOWN :
+        if exit_rect.collidepoint(event.pos) :
+          pygame.quit()
+          sys.exit()
+        elif restart_rect.collidepoint(event.pos) :
+          main_game()
+
+    pygame.display.update()
+    clock.tick(60)
+  
 def main_game() :
   global speed, score
   lead_x_local = lead_x
@@ -72,6 +108,37 @@ def main_game() :
     player_rect = pygame.Rect(lead_x_local, lead_y_local, player_size, player_size)
     pygame.draw.rect(screen, player_color, player_rect)
 
+    if enemy[0] > 0 :
+      enemy[0] -= 10
+    else :
+      enemy[0] = WIDTH
+      enemy[1] = random.randint(obstacle_size, HEIGHT - obstacle_size)
+
+    if food[0] > 0 :
+      food[0] -= 10
+    else :
+      food[0] = WIDTH + 100
+      food[1] = random.randint(obstacle_size, HEIGHT - obstacle_size)
+
+    enemy_rect = pygame.Rect(enemy[0], enemy[1], obstacle_size, obstacle_size)
+    food_rect = pygame.Rect(food[0], food[1], obstacle_size, obstacle_size)
+    pygame.draw.rect(screen, RED, enemy_rect)
+    pygame.draw.rect(screen, BLUE, food_rect)
+
+    if player_rect.colliderect(enemy_rect) :
+      game_over_screen()
+    elif player_rect.colliderect(food_rect) :
+      score_local += 1
+      speed_local = min(speed_local+1, 60)
+
+      food[0] = WIDTH + 100
+      food[1] = random.randint(obstacle_size, HEIGHT-obstacle_size)
+
+    if lead_y_local < player_size or lead_y_local > HEIGHT - player_size or food[0] <= 0 :
+      game_over_screen()
+
+    draw_text(f'Score: {score_local}', font_small, WHITE, WIDTH-120, HEIGHT-40)
+
     pygame.display.update()
 
 def intro_screen() :
@@ -79,11 +146,9 @@ def intro_screen() :
   colox_c2 = 0
 
   button_x = 300
-  
   button_y = 290
   button_width = 100
   button_height = 40
-
   running = True
 
   while running :
