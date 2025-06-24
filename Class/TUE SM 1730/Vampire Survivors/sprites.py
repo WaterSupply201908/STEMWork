@@ -103,10 +103,16 @@ class Enemy(pygame.sprite.Sprite) :
         self.collision('vertical')
         self.rect.center = self.hitbox_rect.center
 
+    def death_timer(self) :
+        if pygame.time.get_ticks() - self.death_time >= self.death_duration :
+            self.kill()
+
     def update(self, dt) :
         if self.death_time == 0 :
             self.move(dt)
             self.animate(dt)
+        else :
+            self.death_timer()
 
     def destroy(self) :
         self.death_time = pygame.time.get_ticks()
