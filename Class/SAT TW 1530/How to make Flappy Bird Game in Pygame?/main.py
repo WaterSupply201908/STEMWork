@@ -10,9 +10,44 @@ background_image = 'background.jpg'
 bird_image = 'bird.png'
 sealevel_image = 'base.jfif'
 
-def flappygame() :
+def createPipe() :
   pass
 
+def isGameOver(horizontal, vertical, up_pipes, down_pipes) :
+  pass
+
+def flappygame() :
+  score = 0
+  horizontal = int(WIDTH/5)
+  vertical = int(WIDTH/2)
+  ground = 0
+  mytempheight = 100
+
+  first_pipe = createPipe()
+  second_pipe = createPipe()
+
+  down_pipes = [
+    {
+      'x' : WIDTH+300-mytempheight,
+      'y' : first_pipe[1]['y']
+    },
+    {
+      'x' : WIDTH+300-mytempheight+(WIDTH/2),
+      'y' : second_pipe[1]['y']
+    }
+  ]
+
+  up_pipes = [
+    {
+      'x' : WIDTH+300-mytempheight,
+      'y' : first_pipe[0]['y']
+    },
+    {
+      'x' : WIDTH+300-mytempheight+(WIDTH/2),
+      'y' : second_pipe[0]['y']
+    }
+  ]
+  
 # Main
 if __name__ == "__main__" :
   pygame.init()
@@ -53,4 +88,9 @@ if __name__ == "__main__" :
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE :
           flappygame()
         else :
-          pass
+          screen.blit(game_images['background'], (0, 0))
+          screen.blit(game_images['flappybird'], (horizontal, vertical))
+          screen.blit(game_images['sealevel'], (ground, elevation))
+
+          pygame.display.update()
+          clock.tick(frame_rate)
