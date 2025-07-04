@@ -1,4 +1,5 @@
 - [L24 - Zelda Game](https://docs.google.com/presentation/d/1e3mvGszihms-RdGslpJ988aw1r-VimIi4-54qee36F4/edit?usp=drive_link)
 - [Resource](https://drive.google.com/file/d/1t5c121JmFoLsg0x0yF0czMEy4884w1I6/view?usp=drive_link)
 - [tinyurl.com/zelda-resource](https://tinyurl.com/zelda-resource)
+- [tinyurl.com/zelda-file](https://tinyurl.com/zelda-file)
 - [Final](https://drive.google.com/drive/folders/1Q6SbTUBQoEdFjoHskg8YLZufxAjgA3UP?usp=sharing)
