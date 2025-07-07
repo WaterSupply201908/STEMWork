@@ -4,3 +4,5 @@
 - [tinyurl.com/zelda-file](https://tinyurl.com/zelda-file)
 - [Final](https://drive.google.com/drive/folders/1Q6SbTUBQoEdFjoHskg8YLZufxAjgA3UP?usp=sharing)
 - [tinyurl.com/zeldagame-resource](tinyurl.com/zeldagame-resource)
+- [dave-cao/Zelda](https://github.com/dave-cao/Zelda)
+- [YouTube](https://www.youtube.com/watch?v=QU1pPzEGrqw)
