@@ -1,0 +1,3 @@
+- [github](https://github.com/clear-code-projects/SimpleZelda)
+- [pastebin](https://pastebin.com/u/ClearCode/1/MBpsreAv)
+- [YouTube](https://youtu.be/cwWi05Icpw0)
