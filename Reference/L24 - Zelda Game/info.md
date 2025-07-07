@@ -3,3 +3,4 @@
 - [tinyurl.com/zelda-resource](https://tinyurl.com/zelda-resource)
 - [tinyurl.com/zelda-file](https://tinyurl.com/zelda-file)
 - [Final](https://drive.google.com/drive/folders/1Q6SbTUBQoEdFjoHskg8YLZufxAjgA3UP?usp=sharing)
+- [tinyurl.com/zeldagame-resource](tinyurl.com/zeldagame-resource)
