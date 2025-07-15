@@ -12,10 +12,33 @@ birdImage = 'bird.png'
 baseImage = 'base.jfif'
 
 def createPipe() :
-    pass
+    offset = HEIGHT / 3
+    pipeHeight = game_images['pipe'][0].get_height()
+    y2 = offset + random.randrange(0, int(HEIGHT-game_images['base'].get_height()-1.2*offset))
+    y1 = pipeHeight - y2 + offset
+    x = WIDTH + 10
+    pipe = [
+        {
+            'x' : x,
+            'y' : -y1
+        },
+        {
+            'x' : x,
+            'y' : y2
+        }
+    ]
+
+    return pipe
 
 def isGameOver(horizontal, vertical, up_pipes, down_pipes) :
-    pass
+    if vertical > elevation - 25 or vertical < 0 :
+        return True
+    
+    for pipe in up_pipes :
+        pipeHeight = game_images['pipe'][0].get_height()
+        if vertical < pipeHeight + pipe['y'] and \
+            abs(horizontal - pipe['x']) < game_images['pipe'][0].get_width() :
+                return True
 
 def flappygame() :
     score = 0
@@ -78,6 +101,42 @@ def flappygame() :
             if pipeMidPos <= playerMidPos < pipeMidPos+4 :
                 score += 1
                 print(f'Score : {score}')
+
+        if birdVelY < birdMaxVelY and not birdFlapped :
+            birdVelY += birdAccY
+
+        if birdFlapped :
+            birdFlapped = False
+
+        birdHeight = game_images['flappybird'].get_height()
+        vertical += min(birdVelY, elevation-vertical-birdHeight)
+
+        for upperPipe, lowerPipe in zip(up_pipes, down_pipes) :
+            upperPipe['x'] += pipeVelX
+            lowerPipe['x'] += pipeVelX
+
+        if up_pipes[0]['x'] < -game_images['pipe'][0].get_width() :
+            up_pipes.pop(0)
+            down_pipes.pop(0)
+
+        screen.blit(game_images['background'], (0, 0))
+        for upperPipe, lowerPipe in zip(up_pipes, down_pipes) :
+            screen.blit(game_images['pipe'][0], (upperPipe['x'], upperPipe['y']))
+            screen.blit(game_images['pipe'][1], (lowerPipe['x'], lowerPipe['y']))
+        screen.blit(game_images['base'], (ground, elevation))
+        screen.blit(game_images['flappybird'], (horizontal, vertical))
+
+        numbers = [int(x) for x in list(str(score))] # e.g. 197 -> [1, 9, 7]
+        width = 0
+        for num in numbers :
+            width += game_images['score'][num].get_width()
+        offsetX = (WIDTH - width) / 1.1
+        for num in numbers :
+            screen.blit(game_images['score'][num], (offsetX, HEIGHT*0.02))
+            offsetX += game_images['score'][num].get_width()
+
+        pygame.display.update()
+        clock.tick(fps)
 
 # Main
 if __name__ == '__main__' :
