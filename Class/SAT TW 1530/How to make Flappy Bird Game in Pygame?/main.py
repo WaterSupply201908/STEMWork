@@ -24,7 +24,10 @@ def createPipe() :
   return pipes
 
 def isGameOver(horizontal, vertical, up_pipes, down_pipes) :
-  pass
+  if vertical > elevation - 25 or vertical < 0 :
+    return True
+  else :
+    return False
 
 def flappygame() :
   score = 0
@@ -106,6 +109,31 @@ def flappygame() :
       newpipe = createPipe()
       up_pipes.append(newpipe[0])
       down_pipes.append(newpipe[1])
+
+    if up_pipes[0]['x'] < -game_images['pipe'][0].get_width() :
+      up_pipes.pop(0)
+      down_pipes.pop(0)
+
+    screen.blit(game_images['background'], (0, 0))
+    for upperPipe, lowerPipe in zip(up_pipes, down_pipes) :
+      screen.blit(game_images['pipe'][0], (upperPipe['x'], upperPipe['y']))
+      screen.blit(game_images['pipe'][1], (lowerPipe['x'], lowerPipe['y']))
+    screen.blit(game_images['sealevel'], (ground, elevation))
+    screen.blit(game_images['flappybird'], (horizontal, vertical))
+
+    numbers = [int(x) for x in list(str(score))] # 123 -> [1, 2, 3]
+    width = 0
+
+    for num in numbers :
+      width += game_images['scoreimages'][num].get_width()
+    xOffset = (WIDTH - width) / 1.1
+
+    for num in numbers :
+      screen.blit(game_images['scoreimages'][num], (xOffset, HEIGHT*0.02))
+      xOffset += game_images['scoreimages'][num].get_width()
+
+    pygame.display.update()
+    clock.tick(frame_rate)
 
 # Main
 if __name__ == "__main__" :
