@@ -1,0 +1,4 @@
+- [L32 - Mario](https://docs.google.com/presentation/d/1TMRKQr1BXH4Q0vk6Hl84f1ecZzL9QFHzqNoYdXPaF3g/edit?usp=drive_link)
+- [Resource](https://drive.google.com/file/d/1cIxCHwes7Bcib1ZXPmMfWAcZdcf2jJbZ/view?usp=drive_link)
+- [tinyurl.com/mario-resource](https://tinyurl.com/mario-resource)
+- [Final](https://drive.google.com/drive/folders/15qucarLn-M7RvNU-8gJ0ri7nm9rfcRZS?usp=drive_link)
