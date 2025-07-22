@@ -33,12 +33,20 @@ def createPipe() :
 def isGameOver(horizontal, vertical, up_pipes, down_pipes) :
     if vertical > elevation - 25 or vertical < 0 :
         return True
-    
+   
     for pipe in up_pipes :
         pipeHeight = game_images['pipe'][0].get_height()
         if vertical < pipeHeight + pipe['y'] and \
             abs(horizontal - pipe['x']) < game_images['pipe'][0].get_width() :
                 return True
+   
+    for pipe in down_pipes :
+        birdHeight = game_images['flappybird'].get_height()
+        if vertical + birdHeight > pipe['y'] and \
+            abs(horizontal - pipe['x']) < game_images['pipe'][0].get_width() :
+                return True
+       
+    return False
 
 def flappygame() :
     score = 0
@@ -115,6 +123,11 @@ def flappygame() :
             upperPipe['x'] += pipeVelX
             lowerPipe['x'] += pipeVelX
 
+        if 0 < up_pipes[0]['x'] < 5 :
+            newpipe = createPipe()
+            up_pipes.append(newpipe[0])
+            down_pipes.append(newpipe[1])
+
         if up_pipes[0]['x'] < -game_images['pipe'][0].get_width() :
             up_pipes.pop(0)
             down_pipes.pop(0)
@@ -148,7 +161,10 @@ if __name__ == '__main__' :
     game_images['flappybird'] = pygame.image.load(birdImage).convert_alpha()
     game_images['base'] = pygame.image.load(baseImage).convert_alpha()
     game_images['background'] = pygame.image.load(backgroundImage).convert_alpha()
-    game_images['pipe'] = pygame.image.load(pipeImage).convert_alpha()
+    game_images['pipe'] = (
+        pygame.transform.rotate(pygame.image.load(pipeImage).convert_alpha(), 180),
+        pygame.image.load(pipeImage).convert_alpha()
+        )
     game_images['score'] = (
         pygame.image.load('0.png').convert_alpha(),
         pygame.image.load('1.png').convert_alpha(),
