@@ -31,13 +31,17 @@ game_over = False
 
 # Helper Functions
 def draw_player(x, y) :
-    pass
+    pygame.draw.circle(screen, (50, 150, 255), (x, y), PLAYER_RADIUS)
 
 def draw_blocks() :
-    pass
+    for rect in blocks :
+        pygame.draw.rect(screen, (random.randrange(20, 200), 50, 50), rect)
 
 def show_text(text, y) :
-    pass
+    surf = font.render(text, True, (255, 255, 255))
+    rect = surf.get_rect(center=(WIDTH//2, y))
+
+    screen.blit(surf, rect)
 
 # Main
 while True :
@@ -57,6 +61,35 @@ while True :
         if keys[pygame.K_RIGHT] and player_x + player_speed + PLAYER_RADIUS < WIDTH :
             player_x += player_speed
 
+    for rect in blocks :
+        if not game_over :
+            rect.y += block_speed
 
-    pygame.display.flip()
+    player_rect = pygame.Rect(player_x-PLAYER_RADIUS, player_y-PLAYER_RADIUS,
+                              PLAYER_RADIUS*2, PLAYER_RADIUS*2)
+    if any(rect.colliderect(player_rect) for rect in blocks) :
+        game_over = True
+
+    blocks = [r for r in blocks if r.y < HEIGHT]
+
+    screen.fill((30, 30, 30))
+    draw_player(player_x, player_y)
+    draw_blocks()
+
+    if not game_over :
+        elapsed = pygame.time.get_ticks() - start_ticks
+    score = elapsed // 1000
+    show_text(f'Score: {score}', 30)
+
+    if game_over :
+        show_text("Game Over! Press 'R' to Restart", HEIGHT//2)
+
+        if keys[pygame.K_r] :
+            blocks.clear()
+            player_x = WIDTH // 2
+            block_speed = BLOCK_FALL_SPEED
+            start_ticks = pygame.time.get_ticks()
+            game_over = False
+
+    pygame.display.flip() # pygame.dislay.update()
     clock.tick(FPS)
