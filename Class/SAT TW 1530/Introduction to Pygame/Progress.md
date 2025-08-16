@@ -1,14 +1,14 @@
 # Date
-2025-08-09
+2025-08-16
 
 # Notebook
-Tutor : LAP021
+Tutor : LAP021 | TW-PC-T01
 
 # Tool
-replit.com
+replit.com | VS Code
 
 # File Location
-TW SAT 15:30/Runner/
+TW SAT 15:30/Runner/ | Documents/Dino20250809/
 
 # Documentation
 - [Expert](https://drive.google.com/drive/folders/1M7DrPk0vs7fxPsR6MtTn7Vt1DMiOU3Qm?usp=drive_link)
