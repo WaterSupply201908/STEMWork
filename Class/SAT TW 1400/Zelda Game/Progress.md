@@ -1,14 +1,16 @@
 # Date
-2025-07-26
+2025-08-16
 
 # Notebook
-Tutor : LAP021
+Tutor : LAP021 | TW-PC-T01
 
 # Tool
-replit.com
+replit.com | VS Code
 
 # File Location
-ZeldaGame20250705/
+ZeldaGame20250705/ | Documents/ZeldaGame20250705/
+Alvin Luk : TW-PC-S01
+Ka Shing Sin : TW-PC-S03
 
 # Documentation
 - [L24 - Zelda Game](https://docs.google.com/presentation/d/1e3mvGszihms-RdGslpJ988aw1r-VimIi4-54qee36F4/edit?usp=drive_link)
