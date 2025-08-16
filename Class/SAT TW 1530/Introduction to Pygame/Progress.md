@@ -8,7 +8,10 @@ Tutor : LAP021 | TW-PC-T01
 replit.com | VS Code
 
 # File Location
-TW SAT 15:30/Runner/ | Documents/Dino20250809/
+TW SAT 15:30/Runner/ | Documents/Dino20250809/  
+Yat Long Chan : TW-PC-S01  
+Wan Sze : TW-PC-S02  
+Hinson Au Yeung : TW-PC-S03  
 
 # Documentation
 - [Expert](https://drive.google.com/drive/folders/1M7DrPk0vs7fxPsR6MtTn7Vt1DMiOU3Qm?usp=drive_link)
