@@ -8,8 +8,8 @@ Tutor : LAP021 | TW-PC-T01
 replit.com | VS Code
 
 # File Location
-ZeldaGame20250705/ | Documents/ZeldaGame20250705/
-Alvin Luk : TW-PC-S01
+ZeldaGame20250705/ | Documents/ZeldaGame20250705/  
+Alvin Luk : TW-PC-S01  
 Ka Shing Sin : TW-PC-S03
 
 # Documentation
