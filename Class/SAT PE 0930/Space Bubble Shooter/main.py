@@ -84,10 +84,27 @@ class Bubble :
             self.reset()
 
     def reset(self) :
-        pass
+        self.radius = random.randint(15, 30)
+        self.x = random.randint(self.radius, WIDTH-self.radius)
+        self.y = random.randint(-100, -20)
+        self.speed = random.uniform(1.0, 3.0)
+        self.color = random.choice(COLORS)
 
     def draw(self) :
-        pass
+        pygame.draw.circle(
+            screen,
+            self.color,
+            (int(self.x), int(self.y)),
+            self.radius
+        )
+       
+        # Shine effect
+        pygame.draw.circle(
+            screen,
+            WHITE,
+            (int(self.x-self.radius//3), int(self.y-self.radius//3)),
+            self.radius//5
+        )
 
 # Main
 ship = Ship()
@@ -101,7 +118,12 @@ while running :
         if event.type == pygame.QUIT :
             running = False
         elif event.type == pygame.KEYDOWN :
-            pass
+            if not game_over and event.key == pygame.K_SPACE :
+                lasers.append(Laser(ship.x, ship.y))
+            elif game_over and event.key == pygame.K_r :
+                ship, lasers = Ship(), []
+                bubbles = [Bubble() for _ in range(8)]
+                explosions, score, game_over = [], 0, False
 
     # Background
     screen.fill(BLACK)
@@ -109,8 +131,43 @@ while running :
         pygame.draw.circle(screen, WHITE, (random.randint(0, WIDTH), random.randint(0, HEIGHT)), 1)
 
     # Game Logic
+    keys = pygame.key.get_pressed()
+    if not game_over :
+        if keys[pygame.K_LEFT] :
+            ship.move('left')
+        elif keys[pygame.K_RIGHT] :
+            ship.move('right')
+
+        for laser in lasers :
+            laser.update()
+           
+            if not laser.active :
+                lasers.remove(laser)
+               
+        for bubble in bubbles :
+            bubble.update()
+
+            if math.sqrt((bubble.x-ship.x)**2+(bubble.y-ship.y)**2) < bubble.radius+20 :
+                game_over = True
+                break
+           
+        for laser in lasers :
+            if laser.active :
+                for bubble in bubbles :
+                    if math.sqrt((bubble.x-laser.x)**2+(bubble.y-laser.y)**2) < bubble.radius :
+                        bubble.reset()
+                        lasers.remove(laser)
+                        score += 10
+                        break
+
+    for obj in bubbles+lasers :
+        obj.draw()
     if not game_over :
         ship.draw()
+       
+    screen.blit(font.render(f'Score: {score}', True, WHITE), (10, 10))
+    if game_over :
+        screen.blit(font.render('GAME OVER! Press R to restart', True, WHITE), (WIDTH//2-180, HEIGHT//2))
    
     # Update Display
     pygame.display.flip() # pygame.display.update()
