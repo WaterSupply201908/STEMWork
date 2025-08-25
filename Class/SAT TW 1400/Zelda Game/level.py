@@ -5,6 +5,7 @@ from player import Player
 from debug import debug
 from support import *
 from random import choice
+from weapon import Weapon
 
 class Level :
   def __init__(self) :
@@ -54,6 +55,9 @@ class Level :
             elif style == 'object' :
               surf = graphics['objects'][int(col)]
               Tile((x, y), [self.visible_sprites, self.obstacle_sprites], 'object', surf)
+
+  def create_attack(self) :
+    Weapon(self.player, [self.visible_sprites])
 
   def run(self) :
     self.visible_sprites.custom_draw(self.player)
