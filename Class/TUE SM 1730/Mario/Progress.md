@@ -1,10 +1,10 @@
 # Date
-2025-08-19
+2025-08-26
 
 # Notebook
-- Tutor : LAP044 / desktop
-- Issac : LAP038 / LAP037
-- Jeffrey : LAP035
+- Tutor : LAP044 / desktop / LAP043
+- Issac : LAP038 / LAP037 / SW-PC-03
+- Jeffrey : LAP035 / SW-PC-04
 
 # Tool
 VS Code
