@@ -2,6 +2,33 @@ import pygame
 from sys import exit
 from random import randint
 
+class Player(pygame.sprite.Sprite) :
+  # field (variable in class)
+
+  # method (function in class)
+  def __init__(self) :
+    super().__init__()
+
+    self.image = pygame.image.load('player_walk_1.png').convert_alpha()
+    self.rect = self.image.get_rect(midbottom=(200, 300))
+
+  def player_input(self) :
+    keys = pygame.key.get_pressed()
+
+    if keys[pygame.K_SPACE] and self.rect.bottom >= 300 :
+      self.gravity = -20
+
+  def apply_gravity(self) :
+    self.gravity += 1
+    self.rect.y += self.gravity
+
+    if self.rect.bottom >= 300 :
+      self.rect.bottom = 300
+
+  def update(self) :
+    self.player_input()
+    self.apply_gravity()
+
 def display_score() :
   current_time = int(pygame.time.get_ticks() / 1000) - start_time
   score_surface = test_font.render(f'Score: {current_time}', False, 'Black')
@@ -93,6 +120,9 @@ player_surface = player_walk[player_index]
 player_rect = player_surface.get_rect(midbottom=(80, 300))
 player_gravity = 0
 
+player = pygame.sprite.GroupSingle()
+player.add(Player())
+
 game_name = test_font.render('Pixel Runner', False, (111, 196, 169))
 game_name_rect = game_name.get_rect(center=(400, 80))
 game_message = test_font.render('Press space to run...', False, (111, 196, 169))
@@ -158,6 +188,8 @@ while True :
       player_rect.bottom = 300
     player_animation()
     screen.blit(player_surface, player_rect)
+    player.draw(screen)
+    player.update()
  
     obstacle_rect_list = obstacle_movement(obstacle_rect_list)
 
