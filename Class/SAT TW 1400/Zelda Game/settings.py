@@ -35,6 +35,11 @@ weapon_data = {
     'sai'    : {'cooldown':80,  'damage':10, 'graphic':'../graphics/weapons/sai/full.png'}
 }
 
+magic_data = {
+    'flame' : {'strength':5, 'cost':20, 'graphic':'../graphics/particles/flame/fire.png'},
+    'heal'  : {'strength':20,'cost':10, 'graphic':'../graphics/particles/heal/heal.png'}
+}
+
 # UI
 BAR_HEIGHT = 20
 HEALTH_BAR_WIDTH = 200
