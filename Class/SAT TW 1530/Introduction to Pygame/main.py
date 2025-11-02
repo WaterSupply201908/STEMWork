@@ -17,15 +17,19 @@ class Player(pygame.sprite.Sprite) :
     self.player_jump = pygame.image.load('jump.png').convert_alpha()
 
     self.image = self.player_walk[self.player_index]
-    self.rect = self.image.get_rect(midbottom=(200, 300))
+    self.rect = self.image.get_rect(midbottom=(80, 300))
 
     self.gravity = 0
+
+    self.jump_sound = pygame.mixer.Sound('jump.mp3')
+    self.jump_sound.set_volume(0.3)
 
   def player_input(self) :
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_SPACE] and self.rect.bottom >= 300 :
       self.gravity = -20
+      self.jump_sound.play()
 
   def apply_gravity(self) :
     self.gravity += 1
@@ -52,6 +56,8 @@ class Player(pygame.sprite.Sprite) :
 
 class Obstacle(pygame.sprite.Sprite) :
   def __init__(self, type) :
+    super().__init__()
+
     if type == 'fly' :
       fly1 = pygame.image.load('fly1.png').convert_alpha()
       fly2 = pygame.image.load('fly2.png').convert_alpha()
@@ -129,6 +135,14 @@ def player_animation() :
 
     player_surface = player_walk[int(player_index)]
 
+def collision_sprite() :
+  if pygame.sprite.spritecollide(player.sprite, obstacle_group, True) :
+    obstacle_group.empty()
+
+    return False
+  else :
+    return True
+
 # Main
 pygame.init()
 
@@ -197,6 +211,9 @@ pygame.time.set_timer(fly_animation_timer, 200)
 game_active = False
 start_time = 0
 score = 0
+bg_music = pygame.mixer.Sound('music.wav')
+bg_music.set_volume(0.1)
+bg_music.play(loops=-1)
 
 while True :
   for e in pygame.event.get() :
@@ -240,21 +257,22 @@ while True :
     screen.blit(ground_surface, (0, 300))
     score = display_score()
 
-    player_gravity += 1
-    player_rect.y += player_gravity
-    if player_rect.bottom >= 300 :
-      player_rect.bottom = 300
-    player_animation()
-    screen.blit(player_surface, player_rect)
+#    player_gravity += 1
+#    player_rect.y += player_gravity
+#    if player_rect.bottom >= 300 :
+#      player_rect.bottom = 300
+#    player_animation()
+#    screen.blit(player_surface, player_rect)
     player.draw(screen)
     player.update()
 
     obstacle_group.draw(screen)
     obstacle_group.update()
  
-    obstacle_rect_list = obstacle_movement(obstacle_rect_list)
+#    obstacle_rect_list = obstacle_movement(obstacle_rect_list)
 
-    game_active = collision(player_rect, obstacle_rect_list)
+#    game_active = collision(player_rect, obstacle_rect_list)
+    game_active = collision_sprite()
   else :
     screen.fill((94, 129, 162))
     screen.blit(player_stand, player_stand_rect)
