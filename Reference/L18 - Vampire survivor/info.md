@@ -1,3 +1,6 @@
+- [L18 - Vampire survivor](https://docs.google.com/presentation/d/1WkV_Ru5FlIVIckEiKTVq_IYgBlWPuU32/edit?usp=drive_link&ouid=103823120062051076702&rtpof=true&sd=true)
+- [dub.sh/vs-resource](https://dub.sh/vs-resource)
+---
 - [L18 - Vampire survivor](https://docs.google.com/presentation/d/1zei0dHR0fZpzkVmF3AFyU8WhgyniOXyQ/edit?usp=drive_link&ouid=110300061605190149204&rtpof=true&sd=true)
 - [Resource](https://drive.google.com/file/d/1cIxCHwes7Bcib1ZXPmMfWAcZdcf2jJbZ/view?usp=drive_link)
 - [tinyurl.com/vs-resource](https://tinyurl.com/vs-resource)
