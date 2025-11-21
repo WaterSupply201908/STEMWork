@@ -74,16 +74,67 @@ class TypingTest :
             self.root.after(100, self.update_timer)
 
     def calculate_wpm(self, text, time_in_seconds) :
-        pass
+        words = len(text) / 5
+        minutes = time_in_seconds / 60
+
+        return words / minutes if minutes > 0 else 0
 
     def reset_text(self) :
-        pass
+        self.is_testing = False
+        self.timer_running = False
+        self.start_time = 0
+
+        self.input_text.config(state='normal')
+        self.input_text.delete(1.0, END)
+
+        self.load_new_text()
+
+        self.status_label.config(text='Start typing to begin the test...')
+        self.speed_label.config(text='Speed: 0 WPM')
+        self.accuracy_label.config(text='Accuracy: 0%')
+        self.time_label.config(text='Time: 0 seconds')
+
+        self.input_text.tag_remove("correct", "1.0", END)
+        self.input_text.tag_remove("wrong", "1.0", END)
 
     def check_typing(self, event) :
-        pass
+        if not self.is_testing :
+            self.is_testing = True
+            self.start_timer()
+            self.status_label.config(text='Test in progress...')
+
+        typed_text = self.input_text.get(1.0, END).strip()
+
+        self.input_text.tag_remove("correct", "1.0", END)
+        self.input_text.tag_remove("wrong", "1.0", END)
+
+        for i, (typed_char, correct_char) in enumerate(zip(typed_text, self.current_text)) :
+            tag = "correct" if typed_char == correct_char else "wrong"
+            self.input_text.tag_add(tag, f"1.{i}", f"1.{i+1}")
+
+        correct_chars = sum(1 for a, b in zip(typed_text, self.current_text) if a == b)
+        accuracy = (correct_chars / len(self.current_text)) * 100 if self.current_text else 0
+        self.accuracy_label.config(text=f'Accuracy: {accuracy:.1f}%')
+
+        if len(typed_text) >= len(self.current_text) :
+            self.end_test()
 
     def end_test(self) :
-        pass
+        self.is_testing = False
+        self.timer_running = False
+        self.input_text.config(state='disabled')
+
+        typed_text = self.input_text.get(1.0, END).strip()
+        elapsed_time = time.time() - self.start_time
+
+        wpm = self.calculate_wpm(typed_text, elapsed_time)
+        correct_chars = sum(1 for a, b in zip(typed_text, self.current_text) if a == b)
+        accuracy = (correct_chars / len(self.current_text)) * 100 if self.current_text else 0
+
+        self.speed_label.config(text=f'Final Speed: {wpm:.1f} WPM')
+        self.accuracy_label.config(text=f'Final Accuracy: {accuracy:.1f}%')
+        self.time_label.config(text=f'Total Time: {elapsed_time:.1f} seconds')
+        self.status_label.config(text='Test completed! Click "New Text" for a new challenge.')
 
 # Main
 if __name__ == "__main__" :
