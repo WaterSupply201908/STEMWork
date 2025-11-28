@@ -16,6 +16,13 @@ current_color = random.randint(0, 3)
 change_timer = 0
 font = pygame.font.Font(None, 36)
 
+# Functions
+def init_color() :
+    global current_color, change_timer
+
+    current_color = random.randint(0, 3)
+    change_timer = 0
+
 running = True
 while running :
     for event in pygame.event.get() :
@@ -28,13 +35,15 @@ while running :
                 else :
                     score = max(0, score-1)
 
-                current_color = random.randint(0, 3)
-                change_timer = 0
+                # current_color = random.randint(0, 3)
+                # change_timer = 0
+                init_color()
 
     change_timer += 1
     if change_timer > 90 :
-        current_color = random.randint(0, 3)
-        change_timer = 0
+        # current_color = random.randint(0, 3)
+        # change_timer = 0
+        init_color()
 
     # Change display
     screen.fill((255, 255, 255))
