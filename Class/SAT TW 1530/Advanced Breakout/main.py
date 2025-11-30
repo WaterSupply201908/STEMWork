@@ -76,17 +76,102 @@ class Ball :
 
 class Brick :
     def __init__(self, x, y, color) :
-        pass
+        self.rect = pygame.Rect(x, y, BRICK_WIDTH, BRICK_HEIGHT)
+        self.color = color
+        self.alive = True
 
     def draw(self, screen) :
-        pass
+        if self.alive :
+            pygame.draw.rect(screen, self.color, self.rect, border_radius=6)
+            pygame.draw.rect(screen, (30, 30, 30), self.rect, 2, border_radius=6)
 
 class PowerUp :
     def __init__(self, x, y, kind) :
-        pass
+        self.x = x
+        self.y = y
+        self.kind = kind
+        self.rect = pygame.Rect(self.x, self.y, POWERUP_SIZE, POWERUP_SIZE)
+        self.fall_speed = 4
 
     def draw(self, screen) :
-        pass
+        icons = {'expand':(180, 255, 150), 'slow':(150, 180, 255), 'multi':(255, 255, 90)}
+
+        pygame.draw.rect(screen, icons[self.kind], self.rect, border_radius=8)
+        pygame.draw.rect(screen, (70, 70, 40), self.rect, 2, border_radius=8)
 
     def update(self) :
-        pass
+        self.y += self.fall_speed
+        self.rect.y = self.y
+
+def create_bricks() :
+    colors = [(255, 90, 90), (255, 190, 90), (220, 215, 75), (90, 210, 90), (90, 180, 255), (150, 130, 230)]
+    bricks = []
+
+    for row in range(BRICK_ROWS) :
+        for col in range(BRICK_COLS) :
+            x = col * (BRICK_WIDTH + BRICK_GAP) + BRICK_GAP // 2
+            y = row * (BRICK_HEIGHT + BRICK_GAP) + 50
+            brick = Brick(x, y, colors[row % len(colors)])
+            bricks.append(brick)
+
+    return bricks
+
+def draw_text(surf, txt, pos, size=32, color=(255, 255, 255)) :
+    font = pygame.font.SysFont('arial', size)
+    label = font.render(txt, True, color)
+    surf.blit(label, pos)
+
+def main() :
+    pygame.init()
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption('Breakout Game')
+    clock = pygame.time.Clock()
+
+    paddle = Paddle()
+    balls = [Ball(paddle.rect.centerx, paddle.rect.top - BALL_RADIUS)]
+    bricks = create_bricks()
+    powerups = []
+    score, lives = 0, 3
+    slow_ball_timer = 0
+    running, game_over, game_clear = True, False, False
+
+    while running :
+        left = right = False
+
+        for e in pygame.event.get() :
+            if e.type == pygame.QUIT :
+                running = False
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] :
+            left = True
+        elif keys[pygame.K_RIGHT] :
+            right = True
+        elif keys[pygame.K_ESCAPE] :
+            running = False
+
+        if game_over or game_clear :
+            if keys[pygame.K_SPACE] :
+                paddle = Paddle()
+                balls = [Ball(paddle.rect.centerx, paddle.rect.top - BALL_RADIUS)]
+                bricks = create_bricks()
+                powerups = []
+                score, lives = 0, 3
+                slow_ball_timer = 0
+                game_over, game_clear = False, False
+
+        if not game_over and not game_clear :
+            paddle.update(left, right)
+
+            if slow_ball_timer and pygame.time.get_ticks() > slow_ball_timer :
+                for ball in balls :
+                    speed = BALL_SPEED * (1 if ball.vy < 0 else -1)
+                    angle = ball.vx / abs(ball.vx) if ball.vx != 0 else 1
+
+                    ball.vy -abs(speed) if ball.vy < 0 else abs(speed)
+                    ball.vx = angle * abs(speed)
+
+                slow_ball_timer = 0
+
+if __name__ == '__main__' :
+    main()
