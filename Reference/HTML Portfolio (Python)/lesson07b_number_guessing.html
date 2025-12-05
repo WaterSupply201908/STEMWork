@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Number Guessing Game</title>
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background: #764ba2;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            min-height: 100px;
+        }
+        .message {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #4caf50;
+            color: white;
+        }
+        .error {
+            background: #f44336;
+            color: white;
+        }
+        .info {
+            background: #2196F3;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🎲 Number Guessing Game</h1>
+        <p style="text-align: center; color: #666;">Guess the number between 1 and 100!</p>
+        
+        <input type="number" id="guess-input" placeholder="Enter your guess (1-100)" min="1" max="100">
+        <button py-click="make_guess()">Guess!</button>
+        <button py-click="reset_game()" style="background: #ff9800;">New Game</button>
+        
+        <div id="output"></div>
+    </div>
+
+    <py-script>
+import random
+
+# Game state
+target_number = random.randint(1, 100)
+attempts = 0
+max_attempts = 7
+
+def make_guess():
+    global attempts
+    
+    if attempts >= max_attempts:
+        Element("output").element.innerHTML = f'<div class="message error">Game Over! The number was {target_number}. Click New Game to try again.</div>'
+        return
+    
+    try:
+        guess = int(Element("guess-input").element.value)
+        
+        if guess < 1 or guess > 100:
+            Element("output").element.innerHTML = '<div class="message error">Please enter a number between 1 and 100!</div>'
+            return
+        
+        attempts += 1
+        remaining = max_attempts - attempts
+        
+        if guess == target_number:
+            Element("output").element.innerHTML = f'''
+            <div class="message success">
+                🎉 Congratulations! You guessed it in {attempts} attempts!<br>
+                The number was {target_number}!
+            </div>
+            '''
+        elif attempts >= max_attempts:
+            Element("output").element.innerHTML = f'''
+            <div class="message error">
+                😢 Game Over! The number was {target_number}.<br>
+                Click New Game to try again!
+            </div>
+            '''
+        elif guess < target_number:
+            Element("output").element.innerHTML = f'''
+            <div class="message info">
+                📈 Too low! Try a higher number.<br>
+                Attempts: {attempts}/{max_attempts} | Remaining: {remaining}
+            </div>
+            '''
+        else:
+            Element("output").element.innerHTML = f'''
+            <div class="message info">
+                📉 Too high! Try a lower number.<br>
+                Attempts: {attempts}/{max_attempts} | Remaining: {remaining}
+            </div>
+            '''
+        
+        Element("guess-input").element.value = ""
+        
+    except:
+        Element("output").element.innerHTML = '<div class="message error">Please enter a valid number!</div>'
+
+def reset_game():
+    global target_number, attempts
+    target_number = random.randint(1, 100)
+    attempts = 0
+    Element("guess-input").element.value = ""
+    Element("output").element.innerHTML = '<div class="message info">🎮 New game started! Guess a number between 1 and 100.</div>'
+
+# Initialize
+Element("output").element.innerHTML = '<div class="message info">🎮 Welcome! You have 7 attempts to guess the number.</div>'
+    </py-script>
+</body>
+</html>

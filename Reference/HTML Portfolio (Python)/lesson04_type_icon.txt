@@ -1,0 +1,12 @@
+Option A: Use the emoji panel (easiest)
+Put your cursor inside the Python string in VS Code / your IDE, e.g. icon = ''.
+Press Win + . (Windows key + dot).
+The emoji panel opens → click the icon you want (snake, game controller, etc.).
+It will be inserted between the quotes.
+Option B: Copy‑paste
+Copy from an existing file (e.g. Lesson 4) or from a website.
+Paste directly into the Python string.
+Option C: Use Unicode escape codes (without seeing the emoji in source)
+python
+icon = '\U0001F40D'  # 🐍
+icon = '\U0001F3AE'  # 🎮

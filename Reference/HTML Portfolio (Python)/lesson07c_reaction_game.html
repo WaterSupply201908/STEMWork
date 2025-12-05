@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reaction Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        #game-canvas {
+            background: #f5f5f5;
+            border-radius: 15px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+        }
+        .score-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+        .score-item {
+            text-align: center;
+        }
+        .score-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        #instructions {
+            color: #666;
+            margin: 15px 0;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 10px;
+        }
+        button {
+            padding: 15px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>⚡ Reaction Speed Game</h1>
+        
+        <div class="score-display">
+            <div class="score-item">
+                <div>Score</div>
+                <div class="score-number" id="score">0</div>
+            </div>
+            <div class="score-item">
+                <div>Time</div>
+                <div class="score-number" id="timer">30</div>
+            </div>
+        </div>
+        
+        <div id="instructions">
+            Click the colored circles as fast as you can!
+        </div>
+        
+        <canvas id="game-canvas" width="500" height="400"></canvas>
+        
+        <button onclick="resetGame()">New Game</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let score = 0;
+        let timeLeft = 30;
+        let circles = [];
+        let gameActive = true;
+        
+        const colors = ['#f44336', '#2196F3', '#4CAF50', '#FFEB3B', '#9C27B0', '#FF9800'];
+        
+        class Circle {
+            constructor() {
+                this.x = Math.random() * (canvas.width - 60) + 30;
+                this.y = Math.random() * (canvas.height - 60) + 30;
+                this.radius = Math.random() * 20 + 20;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.lifetime = 0;
+                this.maxLifetime = 2000; // 2 seconds
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            }
+            
+            isClicked(mouseX, mouseY) {
+                const distance = Math.sqrt((mouseX - this.x) ** 2 + (mouseY - this.y) ** 2);
+                return distance <= this.radius;
+            }
+        }
+        
+        function spawnCircle() {
+            if (gameActive && circles.length < 5) {
+                circles.push(new Circle());
+            }
+        }
+        
+        function update(deltaTime) {
+            // Clear canvas
+            ctx.fillStyle = '#f5f5f5';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw circles
+            circles = circles.filter(circle => {
+                circle.lifetime += deltaTime;
+                if (circle.lifetime < circle.maxLifetime) {
+                    circle.draw();
+                    return true;
+                }
+                return false;
+            });
+            
+            // Spawn new circles randomly
+            if (Math.random() < 0.02 && gameActive) {
+                spawnCircle();
+            }
+        }
+        
+        canvas.addEventListener('click', (e) => {
+            if (!gameActive) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            for (let i = circles.length - 1; i >= 0; i--) {
+                if (circles[i].isClicked(mouseX, mouseY)) {
+                    circles.splice(i, 1);
+                    score++;
+                    document.getElementById('score').innerText = score;
+                    break;
+                }
+            }
+        });
+        
+        // Timer
+        const timerInterval = setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                document.getElementById('timer').innerText = timeLeft;
+            } else {
+                gameActive = false;
+                clearInterval(timerInterval);
+                clearInterval(gameLoop);
+                
+                // Game over message
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 32px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Game Over!', canvas.width / 2, canvas.height / 2 - 20);
+                ctx.font = '24px Arial';
+                ctx.fillText(`Final Score: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
+            }
+        }, 1000);
+        
+        // Game loop
+        let lastTime = 0;
+        const gameLoop = setInterval(() => {
+            const currentTime = Date.now();
+            const deltaTime = currentTime - lastTime || 16;
+            lastTime = currentTime;
+            update(deltaTime);
+        }, 1000 / 60);
+        
+        function resetGame() {
+            score = 0;
+            timeLeft = 30;
+            circles = [];
+            gameActive = true;
+            document.getElementById('score').innerText = '0';
+            document.getElementById('timer').innerText = '30';
+            location.reload();
+        }
+        
+        // Start with some circles
+        for (let i = 0; i < 3; i++) {
+            spawnCircle();
+        }
+    </script>
+</body>
+</html>
