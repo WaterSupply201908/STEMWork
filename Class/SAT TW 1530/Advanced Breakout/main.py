@@ -1,4 +1,4 @@
-import pygame, random
+import pygame, random, sys
 
 # Constants
 WIDTH, HEIGHT = 600, 800
@@ -172,6 +172,91 @@ def main() :
                     ball.vx = angle * abs(speed)
 
                 slow_ball_timer = 0
+
+            for ball in balls :
+                ball.move()
+
+                if ball.x - ball.radius <= 0 or ball.x + ball.radius>= WIDTH :
+                    ball.bounce_x()
+                elif ball.y - ball.radius <= 0 :
+                    ball.bounce_y()
+                elif paddle.rect.colliderect(ball.rect()) :
+                    ball.bounce_y()
+
+                    dx = (ball.x - paddle.rect.centerx) / (paddle.width // 2)
+                    ball.vx += dx * 2
+
+                for brick in bricks :
+                    if brick.alive and brick.rect.colliderect(ball.rect()) :
+                        brick.alive = False
+                        score += 10
+
+                        ball.bounce_y()
+
+                        if random.random() < 0.18 and not [p for p in powerups if p.rect.colliderect(brick.rect)] :
+                            kind = random.choice(POWERUP_TYPES)
+                            powerups.append(PowerUp(brick.rect.centerx, brick.rect.centery, kind))
+
+                        break
+
+            balls = [b for b in balls if b.y - b.radius < HEIGHT]
+
+            if len(balls) == 0 :
+                lives -= 1
+
+                if lives > 0 :
+                    balls = [Ball(paddle.rect.centerx, paddle.rect.top - BALL_RADIUS)]
+                else :
+                    game_over = True
+
+            for p in powerups :
+                p.update()
+
+                if p.rect.colliderect(paddle.rect) :
+                    if p.kind == 'expand' :
+                        paddle.expand()
+                    elif p.kind == 'slow' :
+                        for ball in balls :
+                            ball.vx *= 0.6
+                            ball.vy *= 0.6
+
+                        slow_ball_timer = pygame.time.get_ticks() + 5000
+                    elif p.kind == 'multi' :
+                        if len(balls) < 7 :
+                            balls.append(Ball(paddle.rect.centerx, paddle.rect.top - BALL_RADIUS, BALL_SPEED))
+
+                    p.rect.y = HEIGHT + 999
+            powerups = [p for p in powerups if p.rect.y < HEIGHT]
+
+            if all(not b.alive for b in bricks) :
+                game_clear = True
+            if not any(not b.alive for b in bricks) :
+                paddle.shrink()
+
+        screen.fill((30, 28, 50))
+
+        paddle.draw(screen)
+        for ball in balls :
+            ball.draw(screen)
+        for brick in bricks :
+            if brick.alive :
+                brick.draw(screen)
+        for p in powerups :
+            p.draw(screen)
+
+        draw_text(screen, f"Score: {score}", (10, 8))
+        draw_text(screen, f"Lives: {lives}", (WIDTH-150, 8))
+
+        if game_over :
+            draw_text(screen, "Game Over! Press SPACE to restart", (80, 350), 32, (255, 80, 80))
+        if game_clear :
+            draw_text(screen, "You Win! Press SPACE to restart", (100, 350), 32, (80, 255, 120))
+
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    pygame.quit()
+    sys.exit()
 
 if __name__ == '__main__' :
     main()
