@@ -1,5 +1,5 @@
-# Date4
-2025-11-29
+# Date
+2025-12-06
 
 # Notebook
 Tutor : LAP043
@@ -9,7 +9,7 @@ VS Code
 
 # File Location
 Documents/SATTW1530/  
-Yat Long Chan : LAP023  
+x Yat Long Chan : LAP023  
 Hinson Au Yeung : LAP016  
-Alvin Luk : Lenovo  
+x Alvin Luk : Lenovo  
 Wan Sze : N.A.  
